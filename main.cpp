@@ -9,11 +9,12 @@ using namespace std;
 
 int main(int argc, char* argv[]){
     /*
-        Leer archivo de equipos, cargar equipos en memoria (vector dinamico).
-        Leer archivo de partidos, cargar puntos y fase final en equipos.
+        Leer archivo de equipos, cargar equipos en memoria (lista dinamico).
+        Leer archivo de partidos, cargar partidos (vector dinamico) en fases (vector de objetos de clase fase)
         Formar grupos y fases finales
         Ofrecer menu, while usuario quiera seguir utilizando app
         Alternar entre opciones del menu
+        En caso de querer modificar algo del mundial, se chequeará integridad del cambio y se avisará al usuario ante riesgos
         Exit (y descarga memoria dinamica)
     */
 
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]){
     }
 
     string linea;
-    while (getline(entrada_equipos, linea)){    // Se utiliza string debido a error de compilaci�n
+    while (getline(entrada_equipos, linea)){    // Se utiliza string debido a error de compilaci�n
         linea = to_lower(linea);
         if(validar_equipo(linea)){
             if (cargar_equipo_en_memoria(linea, mundial) == 1){
