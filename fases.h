@@ -5,14 +5,14 @@ class Fase {
     private:
     
     public:
+    
+}
+
+class Fase::public grupos{
 
 }
 
-class Fase::grupos{
-
-}
-
-class Fase::eliminatoria{
+class Fase::public eliminatoria{
 
 }
 
