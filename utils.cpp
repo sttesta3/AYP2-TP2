@@ -8,19 +8,13 @@
 using namespace std;
 
 // MANEJO DE MEMORIA
+/*
 int iniciar_equipo_vacio(Equipo* equipo){
-    equipo = new Equipo;
+    Equipo* equipo = new Equipo;
     if (equipo == nullptr){
         cerr << "ERROR AL CREAR NUEVO EQUIPO" << endl;
         return 1;
     }
-
-    equipo->nombre = '\0';
-    equipo->grupo = '\0';
-    equipo->fase_final = 5;
-
-    for (int i = 0; i < 6; i++)
-        equipo->puntos[i] = 0;
 
     return 0;
 }
@@ -31,11 +25,6 @@ int iniciar_fase_vacia(Fase* fase){
         cerr << "ERROR AL CREAR NUEVA FASE" << endl;
         return 1;
     }
-    /*
-    fase->fase = '\0';
-    fase->cant_equipos = 0;
-    fase->equipos = nullptr;
-    */
     return 0;
 }
 
@@ -119,15 +108,16 @@ int cargar_equipo_en_memoria(string linea, Mundial* mundial){
     //cout << "CANT EQUIPOS: " << mundial->cant_equipos << endl;
     //cout << "CANT FASES: " << mundial->cant_fases << endl;
 
+
     if((mundial->cant_equipos)%10 == 0){
         if (estirar_vector(mundial) == 1)
             return 1;
     }
 
-    Equipo* actual = &mundial->equipos[mundial->cant_equipos];
-    actual->grupo = linea[len_string(linea)-1];
-    actual->nombre = to_lower(split_string(linea));
-    mundial->cant_equipos += 1;
+
+    Equipo* nuevo = new Equipo;
+    nuevo::Equipo(split_string(linea),linea[len_string(linea)-1])
+    mundial->equipos::AgregarElemento(&nuevo);
 
     return 0;
 }
@@ -339,7 +329,7 @@ void ordenar_fases(Mundial* mundial){
 
 
 // FUNCIONES GENERALES
-bool validar_equipo(string linea){
+Equipo* validar_equipo(string linea){
     // La validaci�n realizada es de sintaxis.
     // Si el nombre es alfabetico, y termina en ' X', ser� v�lido. Ej equipo valido: Paises_Bajos
     // Nota: Esto no aplica para todos los deportes (por ej, en e-sports es usual que sean alfanumericos)
@@ -357,7 +347,17 @@ bool validar_equipo(string linea){
     else
         equipo_valido = false;
 
-    return equipo_valido;
+    // MISMA FUNCION QUE TP ANTERIOR, PERO DEVUELVE EQUIPO
+    Equipo salida;
+    if (equipo_valido){
+        salida->nombre = ;
+        salida->grupo = ;
+        salida->fases = nullptr;
+    }
+    else
+        salida = nullptr;
+
+    return salida;
 }
 
 Partido* validar_partido(Mundial* mundial, string linea){
@@ -533,7 +533,7 @@ int mod (float a){
     return a;
 }
 
-
+*/
 // FUNCIONES DE STRING
 int len_string(string a){
     int i = 0;
@@ -605,6 +605,9 @@ string to_upper(string a){
 
 int comparar_alfabeticamente(string a, string b){
     // int resultado = 0;
+    if ((cmp_string(a,""))||(cmp_string(b,"")))
+        return -1;
+
     int i = 0;
 
     int largo_a = len_string(a);
@@ -613,7 +616,7 @@ int comparar_alfabeticamente(string a, string b){
     int ac = int(a[i]);
     int bc = int(b[i]);
 
-    while (ac == bc && ((i < largo_a)&&(i < largo_b))){
+    while (ac == bc && (i < largo_a)&&(i < largo_b)){
         i++;
         ac = int(a[i]);
         bc = int(b[i]);
@@ -649,6 +652,8 @@ int string_a_int(string a){
 
     return resultado;
 }
+
+/*
 // FUNCIONES DE PROGRAMA PRINCIPAL
 bool menu(Mundial* mundial){
     bool mostrar_menu = true;
@@ -775,3 +780,4 @@ void menu_puntos(Mundial* mundial){
     }
 }
 
+*/
