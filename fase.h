@@ -9,7 +9,7 @@ class Fase
     public:
         Fase();
         ~Fase();
-        EliminarPartido();
+        void EliminarPartido();
         virtual int CalcularPuntaje() = 0;
         virtual int AgregarPartido() = 0;
         virtual void ModificarPartido() = 0;

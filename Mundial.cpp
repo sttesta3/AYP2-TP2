@@ -3,12 +3,14 @@
 #include <tuple>
 
 #include "Mundial.h"
+#include "lista.h"
 #include "Equipo.h"
 #include "defs.h"
 #include "utils.h"
 
 Mundial::Mundial()
 {
+    // CONSTRUCTOR
     this->equipos = new Lista<Equipo>;
     this->partidos = new Lista<Partido>;
 
@@ -19,7 +21,7 @@ Mundial::Mundial()
 
 Mundial::~Mundial()
 {
-    //dtor
+    // DESTRUCTOR
     delete this->equipos;
     delete this->partidos;
 }
@@ -36,7 +38,7 @@ int Mundial::CargarEquipos(string archivo1){
     while (getline(entrada, linea)){
         linea = to_lower(linea);
         equipo = this->ValidarEquipo(linea);
-        if (get<1>(equipo) == '\0' && !cmp_string(get<0>(equipo),"\0")){
+        if (get<1>(equipo) == '\0' && cmp_string(get<0>(equipo),"\0")){
             cerr << "ERROR AL CARGAR EQUIPO, linea: " << linea << endl;
             return 1;
         }
@@ -101,8 +103,8 @@ void Mundial::MostrarMenu(void){
         case 2:
             this->Podio();break;
         case 3:
-            {cout << "Ingrese nombre del equipo:" << endl; string busqueda; cin >> busqueda; this->BuscarEquipo(busqueda); break;}
-        case 4:
+            { cout << "Ingrese nombre del equipo:" << endl; string busqueda; cin >> busqueda; this->BuscarEquipo(busqueda); break; }
+        case 4: 
             this->MenuPuntos(); break;
         case 5:
             this->ActualizarPartidos(); break;
@@ -119,17 +121,17 @@ void Mundial::MostrarMenu(void){
 void Mundial::ListarEquipos(void){
     cout << "EQUIPOS" << endl;
 
-    Nodo <Equipo> *iterador = this->equipos->MostrarPrimerElemento();
+    this->equipos->IniciarIterador();
     while (iterador != nullptr){
-        cout << "Equipo: " << iterador->contenido.MostrarNombre() << endl;
-        iterador = iterador->siguiente;
+        cout << "Equipo: " << this->equipos->iterador->MostrarContenido().MostrarNombre();
+        this->equipos->AvanzarIterador(1);
     }
 }
 
 void Mundial::Podio(void){
     cout << "PODIO" << endl;
 
-    cout << "1ro: " << this->primero->contenido.MostrarNombre() << endl;
-    cout << "2do: " << this->segundo->contenido.MostrarNombre() << endl;
-    cout << "3ro: " << this->tercero->contenido.MostrarNombre() << endl;
+    cout << "1ro: " << this->primero->MostrarContenido().MostrarNombre() << endl;
+    cout << "2do: " << this->segundo->MostrarContenido().MostrarNombre() << endl;
+    cout << "3ro: " << this->tercero->MostrarContenido().MostrarNombre() << endl;
 }

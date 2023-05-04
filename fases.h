@@ -3,17 +3,17 @@
 
 class Fase {
     private:
-    
+        
     public:
     
-}
+};
 
 class Fase::public grupos{
 
-}
+};
 
 class Fase::public eliminatoria{
 
-}
+};
 
 #endif

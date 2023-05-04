@@ -11,7 +11,7 @@ Equipo::~Equipo()
     //dtor
 }
 
-// MÉTODOS DE MOSTRAR
+// METODOS DE MOSTRAR
 string Equipo::MostrarNombre(void){
     return this->nombre;
 }
@@ -20,4 +20,12 @@ char Equipo::MostrarGrupo(void){
     return this->grupo;
 }
 
+// METODOS DE ASIGNAR
+void Equipo::AsignarNombre(string nombre){
+    this->nombre = nombre;
+}
+
+void Equipo::AsignarGrupo(char grupo){
+    this->grupo = grupo;
+}
 

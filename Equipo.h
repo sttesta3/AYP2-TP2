@@ -17,10 +17,13 @@ class Equipo {
 
     public:
         Equipo(string nombre, char grupo);
+        
         string MostrarNombre(void);
         char MostrarGrupo(void);
-        int MostrarFaseFinal(void);
-        int MostrarPuntos(int fase);
+        
+        void AsignarNombre(string nombre);
+        void AsignarGrupo(char grupo);
+
         ~Equipo();
 
 };
