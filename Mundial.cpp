@@ -90,7 +90,7 @@ void Mundial::MostrarMenu(void){
         cout << "1. Listar equipos" << endl;
         cout << "2. Mostrar los equipos en primer segundo y tercer lugar" << endl;
         cout << "3. Buscar equipo por nombre" << endl;
-        cout << "4. Mostrar por fase los pa�ses ordenados por puntaje" << endl;
+        cout << "4. Mostrar por fase los paises ordenados por puntaje" << endl;
         cout << "5. Salir" << endl;
 
         char input; cin >> input;
