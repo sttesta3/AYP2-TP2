@@ -40,7 +40,9 @@ Partido* validar_partido(Mundial* mundial, string linea);
 int iterar_fases(Mundial* mundial, char grupo);
 Equipo* buscar_equipo(Mundial* mundial, string nombre);
 int busqueda_binaria(Mundial* mundial, string nombre, int n, int cant_iteraciones);
+*/
 bool divisor_de_fase(string input);
+/*
 int fase_a_numero(string fase);
 int suma_puntos(Equipo* equipo);
 int mod (float a);

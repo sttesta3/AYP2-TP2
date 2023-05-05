@@ -31,15 +31,15 @@ class Mundial {
         int ValidarMundial(void);
         tuple <string, char> ValidarEquipo(string linea);
         int MostrarCantidadEquipos(void);
-        int DefinirIteraciones(int a);
-
+        void DefinirIteraciones();
+        Equipo* BuscarEquipo(string busqueda);
 
         // FUNCIONES DE MENU
         void Menu();
         void MostrarMenu(void);
         void ListarEquipos(void);
         void Podio(void);
-        void MostrarBuscarEquipo(string equipo);
+        void MostrarBuscarEquipo(string busqueda);
         void MenuPuntos(void);
         void ActualizarPartidos(void);
 };

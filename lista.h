@@ -5,6 +5,7 @@
 #include <string>
 #include "nodo.h"
 #include "Equipo.h"
+#include "fase.h"
 #include "utils.h"
 
 template <typename Tipo>
@@ -25,6 +26,7 @@ class Lista {
         Nodo<Tipo>* MostrarPrimerElemento();
 
         void IniciarIterador();
+        void IniciarIteradorAlUltimo();
         Nodo<Tipo>* MostrarIterador();
         void AvanzarIterador(int ITERACIONES);
         void RetrocederIterador(int ITERACIONES);
@@ -57,6 +59,11 @@ Nodo<Tipo>* Lista<Tipo>::MostrarPrimerElemento(){
 template <typename Tipo>
 void Lista<Tipo>::IniciarIterador(){
     this->AsignarIterador(this->inicio);
+}
+
+template <typename Tipo>
+void Lista<Tipo>::IniciarIteradorAlUltimo(){
+    this->AsignarIterador(this->ultimo);
 }
 
 template <typename Tipo>

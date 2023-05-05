@@ -2,6 +2,19 @@
     "files.associations": {
         "iostream": "cpp",
         "ostream": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "cmath": "cpp",
+        "*.tcc": "cpp",
+        "partidos.h": "c",
+        "equipo.h": "c",
+        "string": "c",
+        "tuple": "c",
+        "array": "c",
+        "memory": "c",
+        "istream": "c",
+        "functional": "c",
+        "utility": "c",
+        "mundial.h": "c",
+        "random": "cpp"
     }
 }

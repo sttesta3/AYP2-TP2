@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <tuple>
@@ -84,17 +85,49 @@ int Mundial::CargarEquipos(string archivo1){
             // cout << "EQUIPO CARGADO" << endl;
         }
     }
-
     entrada.close();
+    
+    this->DefinirIteraciones();
     return 0;
 }
 
+void Mundial::DefinirIteraciones(){
+    // Divido por Log(2) debido a que debemos calcular Log(equipos) en base 2
+    this->MAXIMO_ITERACIONES = 2*log(this->MostrarCantidadEquipos())/log(2);
+}
+
+int Mundial::MostrarCantidadEquipos(){
+    return this->equipos->MostrarCantElementos();
+}
 int Mundial::CargarPartidos(string archivo2){
     ifstream entrada(archivo2);
     if (!entrada){
-        cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << endl;
+        cerr << "ERROR AL ABRIR ARCHIVO DE PARTIDOS" << endl;
         return 1;
     }
+
+    string fase;
+    string linea;
+    
+    while (getline(entrada, linea)){
+        linea = to_lower(linea);
+        if (divisor_de_fase(linea))
+            fase = linea;
+        else {
+            Partido* nuevo_partido;
+            if (cmp_string(fase,"grupos"))
+                nuevo_partido = new PartidoGrupo;
+            else
+                nuevo_partido = new PartidoEliminatoria;
+            if (!nuevo_partido){
+                cerr << "ERROR AL CREAR PARTIDO" << endl;
+                return 1;
+            }
+
+            if (nuevo_partido->AsignarValor(linea);
+        }
+    }
+
 
     entrada.close();
     return 0;
@@ -156,10 +189,37 @@ void Mundial::Podio(void){
     cout << "3ro: " << this->tercero->MostrarContenido().MostrarNombre() << endl;
 }
 
-void Mundial::MostrarBuscarEquipo(string equipo){
+Equipo* Mundial::BuscarEquipo(string busqueda){
+    '''
+    Se realiza busqueda lineal, no se me ocurrio un metodo mejor
+    La mayor optimizacion que se me ocurrio (sin iterar la lista) es iterar desde el principio o el final segun primer letra 
+    '''
+    busqueda = to_lower(busqueda);
+    bool busqueda_normal = true
+    bool encontrado = false
+    if (busqueda[0] > 110)
+        busqueda_normal = false;    // Busqueda inversa
+
+    if (busqueda_normal){
+        this->equipos->IniciarIterador();
+
+        while (!encontrado && this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(equipo,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
+            this->equipos->AvanzarIterador(1);
+    }
+    }
 
 }
 
+void Mundial::MostrarBuscarEquipo(string busqueda){
+    Equipo* equipo = this->BuscarEquipo(busqueda);
+    if (equipo == nullptr)
+        cout << "NO HAY COINCIDENCIAS" << endl;
+    else{
+        cout << "EQUIPO: " << to_upper(equipo->MostrarNombre());
+        cout << "GRUPO: " << char(toupper(equipo->MostrarGrupo()));
+        cout << "FASE HASTA LA QUE LLEGO" << endl;
+    }
+}
 void Mundial::MenuPuntos(void){   
 
 }

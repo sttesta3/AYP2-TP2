@@ -495,11 +495,11 @@ int busqueda_binaria(Mundial* mundial, string nombre, int n, int cant_iteracione
     else if (a == 0)
         return n;
 }
-
+*/
 bool divisor_de_fase(string input){
     return ( cmp_string(input,"grupos") || cmp_string(input,"octavos") || cmp_string(input,"cuartos") || cmp_string(input,"semifinales") || cmp_string(input,"final") || cmp_string(input,"tercer puesto"));
 }
-
+/*
 int fase_a_numero(string fase){
     int resultado;
     if (cmp_string(fase,"grupos"))
