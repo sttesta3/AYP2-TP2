@@ -1,6 +1,10 @@
 #ifndef MUNDIAL_H
 #define MUNDIAL_H
 
+#include <string>
+#include <tuple>
+
+#include "nodo.h"
 #include "lista.h"
 #include "Equipo.h"
 
@@ -24,21 +28,20 @@ class Mundial {
         int CargarEquipos(string archivo1);
         int CargarPartidos(string archivo2);
 
-
         int ValidarMundial(void);
         tuple <string, char> ValidarEquipo(string linea);
         int MostrarCantidadEquipos(void);
         int DefinirIteraciones(int a);
+
 
         // FUNCIONES DE MENU
         void Menu();
         void MostrarMenu(void);
         void ListarEquipos(void);
         void Podio(void);
-        void BuscarEquipo(string equipo);
+        void MostrarBuscarEquipo(string equipo);
         void MenuPuntos(void);
         void ActualizarPartidos(void);
-        void Salir(void);
 };
 
 #endif // MUNDIAL_H

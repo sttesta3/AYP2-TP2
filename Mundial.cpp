@@ -3,11 +3,13 @@
 #include <tuple>
 
 #include "Mundial.h"
+
 #include "lista.h"
 #include "Equipo.h"
 #include "defs.h"
 #include "utils.h"
 
+using namespace std;
 Mundial::Mundial()
 {
     // CONSTRUCTOR
@@ -26,30 +28,7 @@ Mundial::~Mundial()
     delete this->partidos;
 }
 
-int Mundial::CargarEquipos(string archivo1){
-    ifstream entrada(archivo1);
-    if (!entrada){
-        cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << endl;
-        return 1;
-    }
-
-    string linea;
-    tuple <string, char> equipo;
-    while (getline(entrada, linea)){
-        linea = to_lower(linea);
-        equipo = this->ValidarEquipo(linea);
-        if (get<1>(equipo) == '\0' && cmp_string(get<0>(equipo),"\0")){
-            cerr << "ERROR AL CARGAR EQUIPO, linea: " << linea << endl;
-            return 1;
-        }
-        else
-            this->equipos->AgregarElemento(equipo);
-    }
-
-    return 0;
-}
-
-tuple <string, char> ValidarEquipo(string linea){
+tuple <string, char> Mundial::ValidarEquipo(string linea){
     int equipo_valido = 0;
     int largo = len_string(linea);
     tuple <string, char> resultado;
@@ -81,6 +60,46 @@ tuple <string, char> ValidarEquipo(string linea){
     return resultado;
 }
 
+int Mundial::CargarEquipos(string archivo1){
+    ifstream entrada(archivo1);
+    if (!entrada){
+        cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << endl;
+        return 1;
+    }
+
+    string linea;
+    tuple <string, char> equipo;
+    while (getline(entrada, linea)){
+        linea = to_lower(linea);
+        equipo = this->ValidarEquipo(linea);
+        if (get<1>(equipo) == '\0' && cmp_string(get<0>(equipo),"\0")){
+            cerr << "ERROR AL CARGAR EQUIPO, linea: " << linea << endl;
+            entrada.close();
+            return 1;
+        }
+        else
+        {
+            // cout << "POR CARGAR EQUIPO" << endl; 
+            this->equipos->AgregarElemento(equipo); 
+            // cout << "EQUIPO CARGADO" << endl;
+        }
+    }
+
+    entrada.close();
+    return 0;
+}
+
+int Mundial::CargarPartidos(string archivo2){
+    ifstream entrada(archivo2);
+    if (!entrada){
+        cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << endl;
+        return 1;
+    }
+
+    entrada.close();
+    return 0;
+}
+
 // FUNCIONES DE MENU
 void Mundial::MostrarMenu(void){
     bool mostrar_menu = true;
@@ -91,7 +110,8 @@ void Mundial::MostrarMenu(void){
         cout << "2. Mostrar los equipos en primer segundo y tercer lugar" << endl;
         cout << "3. Buscar equipo por nombre" << endl;
         cout << "4. Mostrar por fase los paises ordenados por puntaje" << endl;
-        cout << "5. Salir" << endl;
+        cout << "5. Actualizar partido" << endl;
+        cout << "6. Salir" << endl;
 
         char input; cin >> input;
         if (int(input) < 49 || int(input) > 57)
@@ -103,7 +123,7 @@ void Mundial::MostrarMenu(void){
         case 2:
             this->Podio();break;
         case 3:
-            { cout << "Ingrese nombre del equipo:" << endl; string busqueda; cin >> busqueda; this->BuscarEquipo(busqueda); break; }
+            { cout << "Ingrese nombre del equipo:" << endl; string busqueda; cin >> busqueda; this->MostrarBuscarEquipo(busqueda); break; }
         case 4: 
             this->MenuPuntos(); break;
         case 5:
@@ -114,16 +134,16 @@ void Mundial::MostrarMenu(void){
             cout << "Opcion invalida, favor reingresar" << endl; break;
         }
     }
-
-    this->Salir();
 }
 
 void Mundial::ListarEquipos(void){
     cout << "EQUIPOS" << endl;
 
     this->equipos->IniciarIterador();
-    while (iterador != nullptr){
-        cout << "Equipo: " << this->equipos->iterador->MostrarContenido().MostrarNombre();
+    while (this->equipos->MostrarIterador() != nullptr){
+        cout << 
+        "Grupo: "  << char(toupper(this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo()))  << " " <<
+        "Equipo: " << to_upper(this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) << endl;
         this->equipos->AvanzarIterador(1);
     }
 }
@@ -135,3 +155,16 @@ void Mundial::Podio(void){
     cout << "2do: " << this->segundo->MostrarContenido().MostrarNombre() << endl;
     cout << "3ro: " << this->tercero->MostrarContenido().MostrarNombre() << endl;
 }
+
+void Mundial::MostrarBuscarEquipo(string equipo){
+
+}
+
+void Mundial::MenuPuntos(void){   
+
+}
+
+void Mundial::ActualizarPartidos(void){
+
+}
+

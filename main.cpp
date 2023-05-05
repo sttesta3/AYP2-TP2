@@ -1,10 +1,4 @@
-//#include <cmath>
-//#include <fstream>
-#include <iostream>
-// #include <string>
 #include "Mundial.h"
-//#include "utils.h"
-//#include "defs.h"
 
 using namespace std;
 int main(int argc, char* argv[]){
@@ -18,7 +12,7 @@ int main(int argc, char* argv[]){
         ° En caso de actualizar partido, se corre funcion validar mundial y, de ser disruptivo, avisa al user
         ° Exit, guardar si usuario desea y descarga memoria dinamica
     */
-
+    
     if (argc != 3){     
         cout << "Uso: ./" << argv[0] << " file1 file2"<< endl;
         return 1;
@@ -31,16 +25,15 @@ int main(int argc, char* argv[]){
     }
 
     // CARGAR EQUIPOS Y PARTIDOS, SI FALLA DESCARGAR TODO
-    if(mundial->CargarEquipos(argv[1])){
-        if (mundial->CargarPartidos(argv[2])){
-            delete mundial;
-            return 1;
-        }
-    }
-
-    mundial->MostrarMenu();
-    mundial->Salir();
-
-    return 0;
+    int resultado = 0;
+    if(mundial->CargarEquipos(argv[1]))
+        resultado = 1;
+    else if (mundial->CargarPartidos(argv[2]))
+        resultado = 1;
+    else
+        mundial->MostrarMenu();
+        
+    delete mundial;
+    return resultado;
 }
 

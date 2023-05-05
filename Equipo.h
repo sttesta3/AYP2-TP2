@@ -3,7 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "fase.h"
+
+// #include "fase.h"
 
 using namespace std;
 
@@ -11,20 +12,19 @@ class Equipo {
     private:
         string nombre;
         char grupo;
-        vector <class Fase> fases;
+        // vector <class Fase> fases;
 
     protected:
 
     public:
-        Equipo(string nombre, char grupo);
-        
+        Equipo();
+        ~Equipo();
+
         string MostrarNombre(void);
         char MostrarGrupo(void);
         
         void AsignarNombre(string nombre);
         void AsignarGrupo(char grupo);
-
-        ~Equipo();
 
 };
 
