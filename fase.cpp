@@ -1,4 +1,5 @@
-#include "fase.h"
+/*
+ #include "fase.h"
 
 Fase::Fase()
 {
@@ -10,7 +11,7 @@ Fase::~Fase()
     //dtor
 }
 
-/*
+
 FaseGrupos::AgregarPartido(Partido* partido){
 
 }

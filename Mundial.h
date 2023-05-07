@@ -6,6 +6,8 @@
 
 #include "nodo.h"
 #include "lista.h"
+
+#include "partidos.h"
 #include "Equipo.h"
 
 class Mundial {
@@ -28,12 +30,13 @@ class Mundial {
         int CargarEquipos(string archivo1);
         int CargarPartidos(string archivo2);
 
-        int ValidarMundial(void);
-        tuple <string, char> ValidarEquipo(string linea);
+        // 
+        // tuple <string, char> ValidarEquipo(string linea);
+        
         int MostrarCantidadEquipos(void);
         void DefinirIteraciones();
         Equipo* BuscarEquipo(string busqueda);
-
+        
         // FUNCIONES DE MENU
         void Menu();
         void MostrarMenu(void);
@@ -41,7 +44,10 @@ class Mundial {
         void Podio(void);
         void MostrarBuscarEquipo(string busqueda);
         void MenuPuntos(void);
+
+        int ValidarMundial(void);
         void ActualizarPartidos(void);
+
 };
 
 #endif // MUNDIAL_H

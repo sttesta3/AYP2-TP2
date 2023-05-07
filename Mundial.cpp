@@ -4,10 +4,11 @@
 #include <tuple>
 
 #include "Mundial.h"
-
 #include "lista.h"
+
 #include "Equipo.h"
-#include "defs.h"
+#include "partidos.h"
+
 #include "utils.h"
 
 using namespace std;
@@ -29,38 +30,6 @@ Mundial::~Mundial()
     delete this->partidos;
 }
 
-tuple <string, char> Mundial::ValidarEquipo(string linea){
-    int equipo_valido = 0;
-    int largo = len_string(linea);
-    tuple <string, char> resultado;
-
-    if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
-        int i = 0;
-        while (equipo_valido == 0 && i < largo - 2){
-            if (is_alfa(linea[i]) == false)
-                equipo_valido = 1;
-            i += 1;
-        }
-    }
-    else
-        equipo_valido = 1;
-
-    if (!equipo_valido){
-        string equipo = linea;
-        equipo[largo - 1] = '\0';
-        equipo[largo - 2] = '\0';
-        get<0>(resultado) = equipo;
-        get<1>(resultado) = linea[largo - 1];
-        // salida->fases = nullptr;
-    }
-    else {
-        get<0>(resultado) = "\0";
-        get<1>(resultado) = '\0';
-    }
-
-    return resultado;
-}
-
 int Mundial::CargarEquipos(string archivo1){
     ifstream entrada(archivo1);
     if (!entrada){
@@ -69,19 +38,18 @@ int Mundial::CargarEquipos(string archivo1){
     }
 
     string linea;
-    tuple <string, char> equipo;
+    Equipo nuevo_equipo;
     while (getline(entrada, linea)){
         linea = to_lower(linea);
-        equipo = this->ValidarEquipo(linea);
-        if (get<1>(equipo) == '\0' && cmp_string(get<0>(equipo),"\0")){
-            cerr << "ERROR AL CARGAR EQUIPO, linea: " << linea << endl;
+        if (nuevo_equipo.ValidarEquipo(linea) == 1){
+            cerr << "ERROR AL CARGAR EQUIPO, linea invalida: " << linea << endl;
             entrada.close();
             return 1;
         }
         else
         {
             // cout << "POR CARGAR EQUIPO" << endl; 
-            this->equipos->AgregarElemento(equipo); 
+            this->equipos->AgregarElemento(nuevo_equipo); 
             // cout << "EQUIPO CARGADO" << endl;
         }
     }
@@ -92,13 +60,15 @@ int Mundial::CargarEquipos(string archivo1){
 }
 
 void Mundial::DefinirIteraciones(){
-    // Divido por Log(2) debido a que debemos calcular Log(equipos) en base 2
+    // Divido por Log(2) debido a que debemos calcular Log(equipos) en base 2.
+    // Se define el maximo de iteraciones como el doble para dar changui en caso de error
     this->MAXIMO_ITERACIONES = 2*log(this->MostrarCantidadEquipos())/log(2);
 }
 
 int Mundial::MostrarCantidadEquipos(){
     return this->equipos->MostrarCantElementos();
 }
+
 int Mundial::CargarPartidos(string archivo2){
     ifstream entrada(archivo2);
     if (!entrada){
@@ -114,20 +84,26 @@ int Mundial::CargarPartidos(string archivo2){
         if (divisor_de_fase(linea))
             fase = linea;
         else {
-            Partido* nuevo_partido;
-            if (cmp_string(fase,"grupos"))
-                nuevo_partido = new PartidoGrupo;
-            else
-                nuevo_partido = new PartidoEliminatoria;
-            if (!nuevo_partido){
-                cerr << "ERROR AL CREAR PARTIDO" << endl;
-                return 1;
+            if (cmp_string(fase,"grupos")){
+                PartidoGrupo nuevo_partido;
+                if (nuevo_partido.ValidarPartido(linea, this->equipos) == 1){
+                    cerr << "PARTIDO INVALIDO, linea: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+                this->partidos->AgregarElemento(nuevo_partido);
             }
-
-            if (nuevo_partido->AsignarValor(linea);
+            else{
+                PartidoEliminatoria nuevo_partido;
+                if (nuevo_partido.ValidarPartido(linea, this->equipos) == 1){
+                    cerr << "PARTIDO INVALIDO, linea: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+                this->partidos->AgregarElemento(nuevo_partido);
+            }
         }
     }
-
 
     entrada.close();
     return 0;
@@ -190,24 +166,31 @@ void Mundial::Podio(void){
 }
 
 Equipo* Mundial::BuscarEquipo(string busqueda){
-    '''
+    /*
     Se realiza busqueda lineal, no se me ocurrio un metodo mejor
     La mayor optimizacion que se me ocurrio (sin iterar la lista) es iterar desde el principio o el final segun primer letra 
-    '''
+    */
     busqueda = to_lower(busqueda);
-    bool busqueda_normal = true
-    bool encontrado = false
-    if (busqueda[0] > 110)
-        busqueda_normal = false;    // Busqueda inversa
+    bool busqueda_normal = !(busqueda[0] > 110);
 
     if (busqueda_normal){
         this->equipos->IniciarIterador();
 
-        while (!encontrado && this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(equipo,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
+        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
             this->equipos->AvanzarIterador(1);
+        }
     }
-    }
+    else{
+        this->equipos->IniciarIteradorAlUltimo();
 
+        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
+            this->equipos->RetrocederIterador(1);
+        }
+    }
+    if (!this->equipos->MostrarIterador())
+        return nullptr;
+    else
+        return this->equipos->MostrarIterador()->MostrarDireccion();
 }
 
 void Mundial::MostrarBuscarEquipo(string busqueda){
@@ -228,3 +211,36 @@ void Mundial::ActualizarPartidos(void){
 
 }
 
+
+/*
+tuple <string, char> Mundial::ValidarEquipo(string linea){
+    int equipo_valido = 0;
+    int largo = len_string(linea);
+    tuple <string, char> resultado;
+
+    if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
+        int i = 0;
+        while (equipo_valido == 0 && i < largo - 2){
+            if (is_alfa(linea[i]) == false)
+                equipo_valido = 1;
+            i += 1;
+        }
+    }
+    else
+        equipo_valido = 1;
+
+    if (equipo_valido == 0){
+        string equipo = linea;
+        equipo[largo - 1] = '\0';
+        equipo[largo - 2] = '\0';
+        get<0>(resultado) = equipo;
+        get<1>(resultado) = linea[largo - 1];
+    }
+    else {
+        get<0>(resultado) = "\0";
+        get<1>(resultado) = '\0';
+    }
+
+    return resultado;
+}
+*/

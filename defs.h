@@ -1,24 +1,26 @@
 #ifndef DEFS_H_INCLUDED
 #define DEFS_H_INCLUDED
 
-#include "Equipo.h"
+// #include "Equipo.h"
 
 // ESTRUCTURAS DE DATOS
 // Se definen structs y no clases debido a que los partidos no tienen metodos (solo contienen datos)
 // Herencia y polimorfismo de FASES
 
-struct Partido{
-    class Equipo* equipo1;
-    class Equipo* equipo2;
-    int goles1;
-    int goles2;
-};
+/*
+    struct Partido{
+        class Equipo* equipo1;
+        class Equipo* equipo2;
+        int goles1;
+        int goles2;
+    };
 
-struct PartidoEliminatoria{
-    struct Partido partido;
-    int penales1;
-    int penales2;
-};
+    struct PartidoEliminatoria{
+        struct Partido partido;
+        int penales1;
+        int penales2;
+    };
+*/
 
 /*
 class Mundial {

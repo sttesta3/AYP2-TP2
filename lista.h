@@ -3,37 +3,131 @@
 
 #include <tuple>
 #include <string>
+
 #include "nodo.h"
+
 #include "Equipo.h"
-#include "fase.h"
+#include "partidos.h"
+
 #include "utils.h"
 
+using namespace std;
+
+template <typename Tipo> 
+class Nodo{
+    private:
+        Tipo contenido;
+
+        Nodo<Tipo>* siguiente;
+        Nodo<Tipo>* anterior;
+    public:
+        Nodo();
+        ~Nodo();
+
+        Tipo MostrarContenido(void);
+        Tipo* MostrarDireccion(void);
+        Nodo* MostrarSiguiente(void);
+        Nodo* MostrarAnterior(void);
+
+        void AsignarContenido(Tipo contenido);
+        /*
+        void AsignarValor(Equipo nuevo_equipo);
+        void AsignarValor(PartidoGrupo nuevo_partido);
+        void AsignarValor(PartidoEliminatoria nuevo_partido);
+        */
+        
+        void AsignarSiguiente(Nodo* siguiente);
+        void AsignarAnterior(Nodo* anterior);
+};
+
+template <typename Tipo>
+Tipo Nodo<Tipo>::MostrarContenido(){
+    return this->contenido;
+};
+
+template <typename Tipo>
+Tipo* Nodo<Tipo>::MostrarDireccion(){
+    return &this->contenido;
+};
+
+template <typename Tipo>
+Nodo<Tipo>* Nodo<Tipo>::MostrarAnterior(){
+    return this->anterior;
+};
+
+template <typename Tipo>
+Nodo<Tipo>* Nodo<Tipo>::MostrarSiguiente(){
+    return this->siguiente;
+};
+
+template <typename Tipo>
+void Nodo<Tipo>::AsignarContenido(Tipo contenido){
+    this->contenido = contenido;
+};
+
+template <typename Tipo>
+void Nodo<Tipo>::AsignarSiguiente(Nodo* siguiente){
+    this->siguiente = siguiente;
+};
+
+template <typename Tipo>
+void Nodo<Tipo>::AsignarAnterior(Nodo* anterior){
+    this->anterior = anterior;
+};
+
+template <typename Tipo>
+Nodo<Tipo>::Nodo(){
+    
+};
+
+template <typename Tipo>
+Nodo<Tipo>::~Nodo(){
+    
+};
+
+//########################################################################################################################################
+//########################################################################################################################################
+//########################################################################################################################################
+//########################################################################################################################################
+//########################################################################################################################################
+//########################################################################################################################################
+//########################################################################################################################################
+
+// HASTA ACA LO DE NODO
 template <typename Tipo>
 class Lista {
     private:
         int cant_elementos;
 
-        struct Nodo<Tipo> *inicio;
-        struct Nodo<Tipo> *ultimo;
+        Nodo<Tipo> *inicio;
+        Nodo<Tipo> *ultimo;
 
-        struct Nodo<Tipo> *iterador;
+        Nodo<Tipo> *iterador;
 
     public:
         Lista();
         ~Lista();
 
+        // MOSTRAR Y AGREGAR
         int MostrarCantElementos();
         Nodo<Tipo>* MostrarPrimerElemento();
+        int AgregarElemento(Tipo nuevo_elemento);
+        
+        // int EliminarElemento(Nodo<Tipo>* nodo);
 
+        //int EncontrarPosicionElemento(Nodo<Tipo>* nuevo_nodo);
+        int PosicionarElemento(Nodo<Tipo>* nuevo_nodo);
+        //int EncontrarPosicionPartido(Nodo<Partido>* nuevo_nodo);
+
+        Tipo* BuscarElemento(string busqueda);
+
+        // FUNCIONES DE ITERADOR
         void IniciarIterador();
         void IniciarIteradorAlUltimo();
         Nodo<Tipo>* MostrarIterador();
         void AvanzarIterador(int ITERACIONES);
         void RetrocederIterador(int ITERACIONES);
-        
         void AsignarIterador(Nodo<Tipo>* nodo);
-
-        int AgregarElemento(tuple <string, char> nuevo_equipo);
 
 };
 
@@ -84,22 +178,37 @@ void Lista<Tipo>::AvanzarIterador(int ITERACIONES){
     }
 }
 
-template <class Equipo>
-int Lista<Equipo>::AgregarElemento(tuple <string, char> nuevo_equipo){
+template <typename Tipo>
+int Lista<Tipo>::AgregarElemento(Tipo nuevo_elemento){
     // CREAMOS NODO Y ASIGNAMOS VALORES
-    struct Nodo<Equipo> *nuevo_nodo = new Nodo<Equipo>;
+    Nodo<Tipo> *nuevo_nodo = new Nodo<Tipo>;
     if (!nuevo_nodo){
         delete nuevo_nodo;
-        cerr << "ERROR AL AGREGAR EQUIPO: " << get<0>(nuevo_equipo) << endl;
+        cerr << "ERROR DE MEMORIA AL AGREGAR NUEVO NODO: " << endl;
         return 1;
     }
-    nuevo_nodo->AsignarEquipo(nuevo_equipo);
-    
-    // Buscamos posicion correcta del equipo
-    this->IniciarIterador();
-    cout << "ITERADOR INICIADO" << endl;
-    while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != -1){
-        this->AvanzarIterador(1);
+    nuevo_nodo->AsignarContenido(nuevo_elemento);
+    /*
+    ACA ESTABA EL CODIGO DE ENCONTRAR POSICION A EQUIPO
+    */
+    this->PosicionarElemento(nuevo_nodo);
+}
+
+template <class Equipo>
+int Lista<Equipo>::PosicionarEquipo(Nodo<Equipo>* nuevo_nodo){
+// BUSCAMOS POSICION CORRECTA, EMPEZANDO POR INICIO O FINAL SEGUN LA LETRA CON QUE EMPIECE EL EQUIPO    
+    bool busqueda_normal = (nuevo_nodo->MostrarContenido().MostrarNombre()[0] < 110);
+    if (busqueda_normal){
+        this->IniciarIterador();
+        // DEBUG cout << "ITERADOR INICIADO" << endl;
+        while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != -1)
+            this->AvanzarIterador(1);
+    }
+    else{
+        this->IniciarIteradorAlUltimo();
+
+        while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != 1)
+            this->RetrocederIterador(1);
     }
 
     // ASIGNAMOS SEGUN SEA EL CASO (se hardcodea demas para evitar problemas con las puntas de la lista)
@@ -111,7 +220,7 @@ int Lista<Equipo>::AgregarElemento(tuple <string, char> nuevo_equipo){
         this->ultimo = nuevo_nodo;
     }
     else if (this->MostrarIterador() == this->inicio){     // INICIO DE LISTA
-        cout << "ESTAMOS EN EL INICIO" << endl;
+        // DEBUG: cout << "ESTAMOS EN EL INICIO" << endl;
         nuevo_nodo->AsignarAnterior(nullptr);
         nuevo_nodo->AsignarSiguiente(this->inicio);
 
@@ -119,7 +228,7 @@ int Lista<Equipo>::AgregarElemento(tuple <string, char> nuevo_equipo){
         this->inicio = nuevo_nodo;
     }
     else if (this->MostrarIterador() == nullptr){           // FINAL DE LA LISTA
-        cout << "ESTAMOS EN EL FINAL" << endl;
+        // DEBUG: cout << "ESTAMOS EN EL FINAL" << endl;
         nuevo_nodo->AsignarAnterior(this->ultimo);
         nuevo_nodo->AsignarSiguiente(nullptr);
 
@@ -127,8 +236,8 @@ int Lista<Equipo>::AgregarElemento(tuple <string, char> nuevo_equipo){
         this->ultimo = nuevo_nodo;
     }
     else{
-        nuevo_nodo->AsignarSiguiente(iterador);
-        nuevo_nodo->AsignarAnterior(iterador->MostrarAnterior());
+        nuevo_nodo->AsignarSiguiente(this->MostrarIterador());
+        nuevo_nodo->AsignarAnterior(this->iterador->MostrarAnterior());
 
         (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
         (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
@@ -138,6 +247,56 @@ int Lista<Equipo>::AgregarElemento(tuple <string, char> nuevo_equipo){
     return 0;
 }
 
+template <class Partido>
+int Lista<Partido>::EncontrarPosicionElemento(Nodo<Partido>* nuevo_nodo){
+    if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+        nuevo_nodo->AsignarAnterior(nullptr);
+        nuevo_nodo->AsignarSiguiente(nullptr);
+
+        this->inicio = nuevo_nodo;
+        this->ultimo = nuevo_nodo;
+    }
+    else{     // INICIO DE LISTA
+        // DEBUG: cout << "ESTAMOS EN EL INICIO" << endl;
+        nuevo_nodo->AsignarAnterior(nullptr);
+        nuevo_nodo->AsignarSiguiente(this->inicio);
+
+        (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
+        this->inicio = nuevo_nodo;
+    }
+}
+
+template <class PartidoEliminatoria>
+int Lista<PartidoEliminatoria>::EncontrarPosicionElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
+    if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+        nuevo_nodo->AsignarAnterior(nullptr);
+        nuevo_nodo->AsignarSiguiente(nullptr);
+
+        this->inicio = nuevo_nodo;
+        this->ultimo = nuevo_nodo;
+    }
+    else{     // INICIO DE LISTA
+        // DEBUG: cout << "ESTAMOS EN EL INICIO" << endl;
+        nuevo_nodo->AsignarAnterior(this->ultimo);
+        nuevo_nodo->AsignarSiguiente(nullptr);
+
+        (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
+        this->ultimo = nuevo_nodo;
+    }
+}
+/*
+template <class Partido>
+int Lista<Partido>::AgregarElemento(tuple <string, int, string, int> nuevo_partido_grupo){
+    Nodo<PartidoGrupo> *nuevo_nodo = new Nodo<PartidoGrupo>;
+    if (!nuevo_nodo){
+        delete nuevo_nodo;
+        cerr << "ERROR AL AGREGAR PARTIDO: " << get<0>(nuevo_partido_grupo) "vs" << get<2>(nuevo_partido_grupo) << endl;
+        return 1;
+    }
+    nuevo_nodo->AsignarPartido(nuevo_partido_grupo);
+}
+*/
+
 template <typename Tipo> 
 Lista<Tipo>::~Lista(){
     this->IniciarIterador();
@@ -146,7 +305,7 @@ Lista<Tipo>::~Lista(){
 
     Nodo<Tipo>* siguiente;
     while(this->iterador != nullptr){
-        siguiente = iterador->MostrarSiguiente();
+        siguiente = this->iterador->MostrarSiguiente();
         delete this->iterador;
         this->iterador = siguiente;
     }

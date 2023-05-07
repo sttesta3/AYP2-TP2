@@ -20,6 +20,7 @@ class Equipo {
         Equipo();
         ~Equipo();
 
+        int ValidarEquipo(string linea);
         string MostrarNombre(void);
         char MostrarGrupo(void);
         

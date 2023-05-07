@@ -1,10 +1,14 @@
 #ifndef _NODO_TEMPLATE_
 #define _NODO_TEMPLATE_
-
+/*
 #include <tuple>
 #include <string>
 
+#include "Equipo.h"
+#include "partidos.h"
+
 using namespace std;
+
 template <typename Tipo> 
 class Nodo{
     private:
@@ -17,17 +21,33 @@ class Nodo{
         ~Nodo();
 
         Tipo MostrarContenido(void);
+        Tipo* MostrarDireccion(void);
         Nodo* MostrarSiguiente(void);
         Nodo* MostrarAnterior(void);
 
-        void AsignarEquipo(tuple <string, char> nuevo_equipo);
+        void AsignarContenido(Tipo contenido);
+
+        */
+        /*
+        void AsignarValor(Equipo nuevo_equipo);
+        void AsignarValor(PartidoGrupo nuevo_partido);
+        void AsignarValor(PartidoEliminatoria nuevo_partido);
+        
+        
         void AsignarSiguiente(Nodo* siguiente);
         void AsignarAnterior(Nodo* anterior);
+        */
+       /*
 };
 
 template <typename Tipo>
 Tipo Nodo<Tipo>::MostrarContenido(){
     return this->contenido;
+};
+
+template <typename Tipo>
+Tipo* Nodo<Tipo>::MostrarDireccion(){
+    return &this->contenido;
 };
 
 template <typename Tipo>
@@ -41,9 +61,8 @@ Nodo<Tipo>* Nodo<Tipo>::MostrarSiguiente(){
 };
 
 template <typename Tipo>
-void Nodo<Tipo>::AsignarEquipo(tuple <string,char> nuevo_equipo){
-    this->contenido.AsignarNombre(get<0>(nuevo_equipo));
-    this->contenido.AsignarGrupo(get<1>(nuevo_equipo));
+void Nodo<Tipo>::AsignarContenido(Tipo contenido){
+    this->contenido = contenido;
 };
 
 template <typename Tipo>
@@ -65,5 +84,24 @@ template <typename Tipo>
 Nodo<Tipo>::~Nodo(){
     
 };
+*/
+/*
+template <typename Tipo>
+void Nodo<Tipo>::AsignarValor(Equipo nuevo_equipo){
+    this->contenido.AsignarNombre(nuevo_equipo->MostrarNombre());
+    this->contenido.AsignarGrupo(nuevo_equipo->MostrarGrupo());
+};
+
+template <typename Tipo>
+void Nodo<Tipo>::AsignarValor(Partido nuevo_partido){
+    this->contenido.AsignarValores(valor);
+};
+
+template <typename Tipo>
+void Nodo<Tipo>::AsignarValor(tuple <string,int,int,string,int,int> valor){
+    this->contenido.AsignarValores(valor);
+};
+
+*/
 
 #endif

@@ -3,17 +3,17 @@
 
 #include <tuple>
 
+#include "lista.h"
 #include "Equipo.h"
 
-class Partido
+class Partido 
 {
     public:
-        Partido();
-        ~Partido();
-        virtual int AsignarValor(void);
-        virtual void ValidarPartido(string linea);
-        virtual Equipo* DevolverGanador() = 0;
-        virtual tuple <int,int> DevolverPuntos() = 0;
+        int AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
+        virtual int ValidarPartido(string linea, Lista<Equipo>* equipos);
+        // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
+        // virtual tuple <int,int> DevolverPuntos() = 0;
+        // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
 
     private:
         Equipo* equipo1;
@@ -26,8 +26,10 @@ class PartidoGrupo: public Partido{
     public:
         PartidoGrupo();
         ~PartidoGrupo();
-    private:
 
+
+        // PartidoGrupo ValidarPartido(string linea);
+    private:
 };
 
 class PartidoEliminatoria: public Partido{
@@ -35,6 +37,8 @@ class PartidoEliminatoria: public Partido{
         PartidoEliminatoria();
         ~PartidoEliminatoria();
 
+        // PartidoEliminatoria ValidarPartido(string linea);
+        int AsignarPenales(int penales1, int penales2);
     private:
         int penales1;
         int penales2;
