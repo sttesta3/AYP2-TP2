@@ -9,8 +9,10 @@
 class Partido 
 {
     public:
+        string MostrarNombre();
+
         int AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        virtual int ValidarPartido(string linea, Lista<Equipo>* equipos);
+        // virtual int ValidarPartido(string linea, Lista<Equipo>* equipos) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
         // virtual tuple <int,int> DevolverPuntos() = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
@@ -27,7 +29,7 @@ class PartidoGrupo: public Partido{
         PartidoGrupo();
         ~PartidoGrupo();
 
-
+        int ValidarPartido(string linea, Lista<Equipo>* equipos);
         // PartidoGrupo ValidarPartido(string linea);
     private:
 };
@@ -38,6 +40,7 @@ class PartidoEliminatoria: public Partido{
         ~PartidoEliminatoria();
 
         // PartidoEliminatoria ValidarPartido(string linea);
+        int ValidarPartido(string linea, Lista<Equipo>* equipos);
         int AsignarPenales(int penales1, int penales2);
     private:
         int penales1;

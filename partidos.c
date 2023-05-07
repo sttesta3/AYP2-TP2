@@ -79,7 +79,7 @@ PartidoGrupo PartidoGrupo::ValidarPartido(string linea, Lista<Equipo>* equipos){
     // OJO, AUNQUE PARTIDO_VALIDO SEA VERDADERO, PUEDE NO ENCONTRAR EQUIPOS
 }
 
-int PartidoEliminatoria::ValidarPartido(string linea){
+int PartidoEliminatoria::ValidarPartido(string linea, Lista<Equipo>* equipos){
     bool partido_valido = true;
 
     // SEPARACION EN ARGUMENTOS

@@ -4,7 +4,6 @@
 #include <string>
 #include <tuple>
 
-#include "nodo.h"
 #include "lista.h"
 
 #include "partidos.h"

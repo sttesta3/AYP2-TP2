@@ -4,8 +4,6 @@
 #include <tuple>
 #include <string>
 
-#include "nodo.h"
-
 #include "Equipo.h"
 #include "partidos.h"
 
@@ -116,7 +114,97 @@ class Lista {
         // int EliminarElemento(Nodo<Tipo>* nodo);
 
         //int EncontrarPosicionElemento(Nodo<Tipo>* nuevo_nodo);
-        int PosicionarElemento(Nodo<Tipo>* nuevo_nodo);
+        int PosicionarElemento(Nodo<Equipo>* nuevo_nodo){
+            bool busqueda_normal = (nuevo_nodo->MostrarContenido().MostrarNombre()[0] < 110);
+            if (busqueda_normal){
+                this->IniciarIterador();
+                // DEBUG cout << "ITERADOR INICIADO" << endl;
+                while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != -1)
+                    this->AvanzarIterador(1);
+            }
+            else{
+                this->IniciarIteradorAlUltimo();
+
+                while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != 1)
+                    this->RetrocederIterador(1);
+            }
+
+            // ASIGNAMOS SEGUN SEA EL CASO (se hardcodea demas para evitar problemas con las puntas de la lista)
+            if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                this->inicio = nuevo_nodo;
+                this->ultimo = nuevo_nodo;
+            }
+            else if (this->MostrarIterador() == this->inicio){     // INICIO DE LISTA
+                // DEBUG: cout << "ESTAMOS EN EL INICIO" << endl;
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(this->inicio);
+
+                (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
+                this->inicio = nuevo_nodo;
+            }
+            else if (this->MostrarIterador() == nullptr){           // FINAL DE LA LISTA
+                // DEBUG: cout << "ESTAMOS EN EL FINAL" << endl;
+                nuevo_nodo->AsignarAnterior(this->ultimo);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
+                this->ultimo = nuevo_nodo;
+            }
+            else{
+                nuevo_nodo->AsignarSiguiente(this->MostrarIterador());
+                nuevo_nodo->AsignarAnterior(this->iterador->MostrarAnterior());
+
+                (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
+                (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
+            }
+
+            this->cant_elementos += 1;
+            return 0;
+        }
+
+        int PosicionarElemento(Nodo<PartidoGrupo>* nuevo_nodo){
+            if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                this->inicio = nuevo_nodo;
+                this->ultimo = nuevo_nodo;
+            }
+            else{
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(this->inicio);
+
+                (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
+                this->inicio = nuevo_nodo;
+            }
+
+            this->cant_elementos += 1;
+            return 0;
+        }
+
+        int PosicionarElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
+            if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                this->inicio = nuevo_nodo;
+                this->ultimo = nuevo_nodo;
+            }
+            else{
+                nuevo_nodo->AsignarAnterior(this->ultimo);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
+                this->ultimo = nuevo_nodo;
+            }
+
+            this->cant_elementos += 1;
+            return 0;
+        }
+
         //int EncontrarPosicionPartido(Nodo<Partido>* nuevo_nodo);
 
         Tipo* BuscarElemento(string busqueda);
@@ -191,11 +279,11 @@ int Lista<Tipo>::AgregarElemento(Tipo nuevo_elemento){
     /*
     ACA ESTABA EL CODIGO DE ENCONTRAR POSICION A EQUIPO
     */
-    this->PosicionarElemento(nuevo_nodo);
+    return this->PosicionarElemento(nuevo_nodo);
 }
 
-template <class Equipo>
-int Lista<Equipo>::PosicionarEquipo(Nodo<Equipo>* nuevo_nodo){
+/*
+int Lista<Equipo>::PosicionarElemento(Nodo<Equipo>* nuevo_nodo){
 // BUSCAMOS POSICION CORRECTA, EMPEZANDO POR INICIO O FINAL SEGUN LA LETRA CON QUE EMPIECE EL EQUIPO    
     bool busqueda_normal = (nuevo_nodo->MostrarContenido().MostrarNombre()[0] < 110);
     if (busqueda_normal){
@@ -247,8 +335,9 @@ int Lista<Equipo>::PosicionarEquipo(Nodo<Equipo>* nuevo_nodo){
     return 0;
 }
 
-template <class Partido>
-int Lista<Partido>::EncontrarPosicionElemento(Nodo<Partido>* nuevo_nodo){
+
+template <class PartidoGrupo>
+int Lista<PartidoGrupo>::PosicionarElemento(Nodo<PartidoGrupo>* nuevo_nodo){
     if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
         nuevo_nodo->AsignarAnterior(nullptr);
         nuevo_nodo->AsignarSiguiente(nullptr);
@@ -267,7 +356,7 @@ int Lista<Partido>::EncontrarPosicionElemento(Nodo<Partido>* nuevo_nodo){
 }
 
 template <class PartidoEliminatoria>
-int Lista<PartidoEliminatoria>::EncontrarPosicionElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
+int Lista<PartidoEliminatoria>::PosicionarElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
     if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
         nuevo_nodo->AsignarAnterior(nullptr);
         nuevo_nodo->AsignarSiguiente(nullptr);
@@ -275,7 +364,7 @@ int Lista<PartidoEliminatoria>::EncontrarPosicionElemento(Nodo<PartidoEliminator
         this->inicio = nuevo_nodo;
         this->ultimo = nuevo_nodo;
     }
-    else{     // INICIO DE LISTA
+    else{     // FINAL DE LISTA
         // DEBUG: cout << "ESTAMOS EN EL INICIO" << endl;
         nuevo_nodo->AsignarAnterior(this->ultimo);
         nuevo_nodo->AsignarSiguiente(nullptr);
@@ -284,6 +373,8 @@ int Lista<PartidoEliminatoria>::EncontrarPosicionElemento(Nodo<PartidoEliminator
         this->ultimo = nuevo_nodo;
     }
 }
+
+*/
 /*
 template <class Partido>
 int Lista<Partido>::AgregarElemento(tuple <string, int, string, int> nuevo_partido_grupo){
