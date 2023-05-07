@@ -3,16 +3,16 @@
 
 #include <tuple>
 
-#include "lista.h"
-#include "Equipo.h"
-
+using namespace std;
 class Partido 
 {
     public:
-        string MostrarNombre();
+        tuple <Equipo*,Equipo*> MostrarEquipos();
 
-        int AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        // virtual int ValidarPartido(string linea, Lista<Equipo>* equipos) = 0;
+        void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
+        virtual tuple<int,int> MostrarPuntos(void) = 0;
+        // virtual int ValidarPartido(string linea, Mundial* mundial) = 0; 
+        // virtual int ValidarPartido(string linea, Mundial* mundial) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
         // virtual tuple <int,int> DevolverPuntos() = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
@@ -29,8 +29,10 @@ class PartidoGrupo: public Partido{
         PartidoGrupo();
         ~PartidoGrupo();
 
-        int ValidarPartido(string linea, Lista<Equipo>* equipos);
-        // PartidoGrupo ValidarPartido(string linea);
+        //int ValidarPartido(string linea, Mundial* mundial);
+        tuple <string,int,string,int> ValidarPartido(string linea);
+        void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
+        tuple<int,int> MostrarPuntos(void);
     private:
 };
 
@@ -39,9 +41,13 @@ class PartidoEliminatoria: public Partido{
         PartidoEliminatoria();
         ~PartidoEliminatoria();
 
-        // PartidoEliminatoria ValidarPartido(string linea);
-        int ValidarPartido(string linea, Lista<Equipo>* equipos);
+        tuple<string,int,int,string,int,int> ValidarPartido(string linea);
+        void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
         int AsignarPenales(int penales1, int penales2);
+
+        tuple<int,int> MostrarPuntos(void);
+        Equipo* MostrarGanador(void);
+        Equipo* MostrarPerdedor(void);
     private:
         int penales1;
         int penales2;

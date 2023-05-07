@@ -1,18 +1,17 @@
 #include <tuple>
 #include <string>
 
-#include "lista.h"
 #include "partidos.h"
-#include "Equipo.h"
 
 using namespace std;
 
-Partido::Partido(){
+Partido::Partido(){}
+Partido::~Partido(){}
+PartidoGrupo::PartidoGrupo(){}
+PartidoGrupo::~PartidoGrupo(){}
+PartidoEliminatoria::PartidoEliminatoria(){}
+PartidoEliminatoria::~PartidoEliminatoria(){}
 
-}
-Partido::~Partido(){
-
-}
 Partido::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2){
     this->equipo1 = equipo1;
     this->equipo1 = equipo1;
@@ -20,27 +19,27 @@ Partido::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2){
     this->goles2 = goles2;
 }
 
-PartidoGrupo::PartidoGrupo(){
-
-}
-PartidoGrupo::~PartidoGrupo(){
-
+PartidoGrupo::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2){
+    Partido::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2);
 }
 
-PartidoEliminatoria::PartidoEliminatoria(){
+tuple <Equipo*,Equipo*> Partido::MostrarEquipos(){
+    tuple <Equipo*,Equipo*> resultado;
+    get<0>(resultado) = this->equipo1;
+    get<1>(resultado) = this->equipo2;
 
+    return resultado;
 }
-PartidoEliminatoria::~PartidoEliminatoria(){
 
-}
 PartidoEliminatoria::AsignarPenales(int penales1, int penales2){
     this->penales1 = penales1;
     this->penales2 = penales2;
 }
 
-PartidoGrupo PartidoGrupo::ValidarPartido(string linea, Lista<Equipo>* equipos){
+tuple <string,int,string,int> PartidoGrupo::ValidarPartido(string linea){
     bool partido_valido = true;
-    PartidoGrupo resultado;
+    tuple <string,int,string,int> resultado;
+
     // SEPARACION EN ARGUMENTOS
     string argv[4];
     int argc = 0;
@@ -58,30 +57,37 @@ PartidoGrupo PartidoGrupo::ValidarPartido(string linea, Lista<Equipo>* equipos){
         }
     }
 
-    if (partido_valido && argc != 3){
+    if (partido_valido == 0 && argc != 3){
         cerr << "Pocos argumentos en partidos. Linea: " << linea << endl;
         partido_valido = false;
     }
 
-    // BUSCAR EQUIPOS Y VALIDAR GOLES
+    // VALIDAR GOLES
     if (argv[1] < 0 || argv[3] < 0){
         cerr << "CANTIDAD DE GOLES INCORRECTA. Linea: " << linea << endl;
         partido_valido = false;
     }
 
     // ASIGNACION DE ARGUMENTOS A RESULTADO DE SALIDA
-    if (!partido_valido)
-        resultado->AsignarValores(nullptr,nullptr,-5,-5);
-    else
-        resultado->AsignarValores(equipos->BuscarElemento(argv[0]),equipos->BuscarElemento(argv[2]),argv[1],argv[3]);
+    for (int i = 0; i < 4; i++){
+        if (partido_valido)
+            get<i>(resultado) = argv[i];
+        else{
+            if (i%2 == 0)
+                get<i>(resultado) = "\0";
+            else
+                get<i>(resultado) = -5;
+        }
+            get<i>(resultado) = argv[i];
+    }
 
     return resultado;    
     // OJO, AUNQUE PARTIDO_VALIDO SEA VERDADERO, PUEDE NO ENCONTRAR EQUIPOS
 }
 
-int PartidoEliminatoria::ValidarPartido(string linea, Lista<Equipo>* equipos){
+tuple <string,int,int,string,int,int>  PartidoEliminatoria::ValidarPartido(string linea, Mundial* mundial){
     bool partido_valido = true;
-
+    tuple <string,int,int,string,int,int> resultado;
     // SEPARACION EN ARGUMENTOS
     string argv[6];
     int argc = 0;
@@ -110,17 +116,34 @@ int PartidoEliminatoria::ValidarPartido(string linea, Lista<Equipo>* equipos){
         partido_valido = false;
     }
 
-    if (!partido_valido){
-        resultado->AsignarValores(nullptr,nullptr,-5,-5);
-        resultado->AsignarPenales(-5,-5);
+    for (int i = 0; i < 4; i++){
+        if (partido_valido)
+            get<i>(resultado) = argv[i];
+        else{
+            if (i%3 == 0)
+                get<i>(resultado) = "\0";
+            else
+                get<i>(resultado) = -5;
+        }
     }
-    else{
-        resultado->AsignarValores(equipos->BuscarElemento(argv[0]),equipos->BuscarElemento(argv[2]),argv[1],argv[3]);
-        resultado->AsignarPenales(argv[2],argv[5]);
-    }
+
     return resultado;    
 }
 
+Equipo* PartidoEliminatoria::MostrarGanador(){
+    tuple <int,int> puntos = this->MostrarPuntos();
+    if (get<0>(puntos) > get<1>(puntos))
+        return this->equipo1;
+    else
+        return this->equipo2;
+}
+
+Equipo* PartidoEliminatoria::MostrarPerdedor(){
+    if (this->MostrarGanador() == this->equipo1)
+        return this->equipo2;
+    else
+        return this->equipo1;
+}
 /*
 int PartidoGrupo::CargarDatos(string linea, Lista<Partido>* partidos){
     tuple <string,int,string,int> resultado = this->ValidarPartido(linea);

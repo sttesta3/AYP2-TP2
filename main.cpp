@@ -26,9 +26,9 @@ int main(int argc, char* argv[]){
 
     // CARGAR EQUIPOS Y PARTIDOS, SI FALLA DESCARGAR TODO
     int resultado = 0;
-    if(mundial->CargarEquipos(argv[1]))
+    if(mundial->CargarEquipos(argv[1]) == 1)
         resultado = 1;
-    else if (mundial->CargarPartidos(argv[2]))
+    else if (mundial->CargarPartidos(argv[2]) == 1)
         resultado = 1;
     else
         mundial->MostrarMenu();

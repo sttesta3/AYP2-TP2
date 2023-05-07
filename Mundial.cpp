@@ -16,7 +16,8 @@ Mundial::Mundial()
 {
     // CONSTRUCTOR
     this->equipos = new Lista<Equipo>;
-    this->partidos = new Lista<Partido>;
+    this->partidos_grupos = new Lista<PartidoGrupo>;
+    this->partidos_eliminatoria = new Lista<PartidoEliminatoria>;
 
     this->primero = nullptr;
     this->segundo = nullptr;
@@ -27,7 +28,8 @@ Mundial::~Mundial()
 {
     // DESTRUCTOR
     delete this->equipos;
-    delete this->partidos;
+    delete this->partidos_grupos;
+    delete this->partidos_eliminatoria;
 }
 
 int Mundial::CargarEquipos(string archivo1){
@@ -62,7 +64,7 @@ int Mundial::CargarEquipos(string archivo1){
 void Mundial::DefinirIteraciones(){
     // Divido por Log(2) debido a que debemos calcular Log(equipos) en base 2.
     // Se define el maximo de iteraciones como el doble para dar changui en caso de error
-    this->MAXIMO_ITERACIONES = 2*log(this->MostrarCantidadEquipos())/log(2);
+    this->MAXIMO_ITERACIONES = 2*int(round(log(this->MostrarCantidadEquipos())/log(2)));
 }
 
 int Mundial::MostrarCantidadEquipos(){
@@ -86,21 +88,61 @@ int Mundial::CargarPartidos(string archivo2){
         else {
             if (cmp_string(fase,"grupos")){
                 PartidoGrupo nuevo_partido;
-                if (nuevo_partido.ValidarPartido(linea, this->equipos) == 1){
-                    cerr << "PARTIDO INVALIDO, linea: " << linea << endl;
+                tuple <string,int,string,int> encontrado = nuevo_partido.ValidarPartido(linea);
+                if (cmp_string(get<0>(encontrado),"\0")){
+                    cerr << "PARTIDO DE FASE DE GRUPOS INVALIDO, linea: " << linea << endl;
                     entrada.close();
                     return 1;
                 }
-                this->partidos->AgregarElemento(nuevo_partido);
+
+                Equipo* equipo1 = this->BuscarEquipo(get<0>(encontrado));
+                if (!equipo1){
+                    cerr << "EQUIPO NO ENCONTRADO: " << get<0>(encontrado) << " Partido: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+                Equipo* equipo2 = this->BuscarEquipo(get<2>(encontrado));
+                if (!equipo2){
+                    cerr << "EQUIPO NO ENCONTRADO: " << get<2>(encontrado) << " Partido: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+                
+                nuevo_partido.AsignarValores(equipo1,equipo2,get<1>(encontrado),get<3>(encontrado));
+                this->partidos_grupos->AgregarElemento(nuevo_partido);
             }
             else{
                 PartidoEliminatoria nuevo_partido;
-                if (nuevo_partido.ValidarPartido(linea, this->equipos) == 1){
-                    cerr << "PARTIDO INVALIDO, linea: " << linea << endl;
+                tuple <string,int,int,string,int,int> encontrado = nuevo_partido.ValidarPartido(linea);
+                if (cmp_string(get<0>(encontrado),"\0")){
+                    cerr << "PARTIDO DE FASE ELIMINATORIA INVALIDO, linea: " << linea << endl;
                     entrada.close();
                     return 1;
                 }
-                this->partidos->AgregarElemento(nuevo_partido);
+
+                Equipo* equipo1 = this->BuscarEquipo(get<0>(encontrado));
+                if (!equipo1){
+                    cerr << "EQUIPO NO ENCONTRADO: " << get<0>(encontrado) << " Partido: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+                Equipo* equipo2 = this->BuscarEquipo(get<3>(encontrado));
+                if (!equipo2){
+                    cerr << "EQUIPO NO ENCONTRADO: " << get<2>(encontrado) << " Partido: " << linea << endl;
+                    entrada.close();
+                    return 1;
+                }
+
+                nuevo_partido.AsignarValores(equipo1,equipo2,get<1>(encontrado),get<4>(encontrado));
+                nuevo_partido.AsignarPenales(get<2>(encontrado),get<5>(encontrado));
+                this->partidos_eliminatoria->AgregarElemento(nuevo_partido);
+                
+                if (cmp_string(fase,"final")){
+                    this->primero = nuevo_partido.MostrarGanador();
+                    this->segundo = nuevo_partido.MostrarPerdedor();
+                }
+                else if (cmp_string(fase,"tercer puesto"))
+                    this->tercero = nuevo_partido.MostrarGanador();
             }
         }
     }
@@ -160,9 +202,9 @@ void Mundial::ListarEquipos(void){
 void Mundial::Podio(void){
     cout << "PODIO" << endl;
 
-    cout << "1ro: " << this->primero->MostrarContenido().MostrarNombre() << endl;
-    cout << "2do: " << this->segundo->MostrarContenido().MostrarNombre() << endl;
-    cout << "3ro: " << this->tercero->MostrarContenido().MostrarNombre() << endl;
+    cout << "1ro: " << this->primero->MostrarNombre() << endl;
+    cout << "2do: " << this->segundo->MostrarNombre() << endl;
+    cout << "3ro: " << this->tercero->MostrarNombre() << endl;
 }
 
 Equipo* Mundial::BuscarEquipo(string busqueda){

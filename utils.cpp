@@ -575,7 +575,7 @@ string to_lower(string a){
     int largo = len_string(a);
 
     for (int i=0; i < largo;i++)
-        a[i] = tolower(a[i]);
+        a[i] = char(tolower(a[i]));
 
     return a;
 }
@@ -640,7 +640,7 @@ int string_a_int(string a){
     if (cmp_string(a, "-1") == false){
         for (int i=0; i < largo; i++){
             if ((int)a[i] >= 48 && (int)a[i] <= 57)
-                resultado += ((int)a[i] % 48 )*pow(10,largo - 1 - i);
+                resultado += int(((int)a[i] % 48 )*pow(10,largo - 1 - i));
             else {
                 resultado = -3;
                 i = largo;  // pseudo break

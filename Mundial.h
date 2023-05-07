@@ -5,19 +5,19 @@
 #include <tuple>
 
 #include "lista.h"
-
 #include "partidos.h"
 #include "Equipo.h"
 
 class Mundial {
     private:
         Lista <Equipo> *equipos;
-        Lista <Partido> *partidos;
+        Lista <PartidoGrupo> *partidos_grupos;
+        Lista <PartidoEliminatoria> *partidos_eliminatoria;
         int MAXIMO_ITERACIONES;
 
-        Nodo<Equipo> *primero;
-        Nodo<Equipo> *segundo;
-        Nodo<Equipo> *tercero;
+        Equipo *primero;
+        Equipo *segundo;
+        Equipo *tercero;
 
     protected:
 
@@ -28,7 +28,6 @@ class Mundial {
         // FUNCIONES DE MEMORIA
         int CargarEquipos(string archivo1);
         int CargarPartidos(string archivo2);
-
         // 
         // tuple <string, char> ValidarEquipo(string linea);
         

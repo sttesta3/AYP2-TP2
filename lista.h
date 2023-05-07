@@ -1,5 +1,5 @@
-#ifndef _LISTA_TEMPLATE_
-#define _LISTA_TEMPLATE_
+#ifndef LISTA_H
+#define LISTA_H
 
 #include <tuple>
 #include <string>
@@ -402,4 +402,4 @@ Lista<Tipo>::~Lista(){
     }
 }
 
-#endif
+#endif // LISTA_H
