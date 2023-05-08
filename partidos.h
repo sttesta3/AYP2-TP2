@@ -1,16 +1,17 @@
 #ifndef PARTIDOS_H
 #define PARTIDOS_H
 
-#include <tuple>
+//#include <tuple>
+//#include <string>
+#include "Equipo.h"
 
-using namespace std;
 class Partido 
 {
     public:
-        tuple <Equipo*,Equipo*> MostrarEquipos();
+        std::tuple <Equipo*,Equipo*> MostrarEquipos();
 
-        void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        virtual tuple<int,int> MostrarPuntos(void) = 0;
+        virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
+        virtual std::tuple<int,int> MostrarPuntos(void) = 0;
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0; 
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
@@ -27,25 +28,24 @@ class Partido
 class PartidoGrupo: public Partido{
     public:
         PartidoGrupo();
-        ~PartidoGrupo();
+        //~PartidoGrupo();
 
         //int ValidarPartido(string linea, Mundial* mundial);
-        tuple <string,int,string,int> ValidarPartido(string linea);
+        std::tuple<std::string,int,std::string,int> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        tuple<int,int> MostrarPuntos(void);
-    private:
+        std::tuple<int,int> MostrarPuntos(void);
 };
 
 class PartidoEliminatoria: public Partido{
     public:
         PartidoEliminatoria();
-        ~PartidoEliminatoria();
+        // ~PartidoEliminatoria();
 
-        tuple<string,int,int,string,int,int> ValidarPartido(string linea);
+        std::tuple<std::string,int,int,std::string,int,int> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
         int AsignarPenales(int penales1, int penales2);
 
-        tuple<int,int> MostrarPuntos(void);
+        std::tuple<int,int> MostrarPuntos(void);
         Equipo* MostrarGanador(void);
         Equipo* MostrarPerdedor(void);
     private:

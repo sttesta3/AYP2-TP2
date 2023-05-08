@@ -1,6 +1,5 @@
-#include <string>
+// #include <string> EDIT LINKER
 #include "Equipo.h"
-#include "utils.h"
 
 Equipo::Equipo(){
     //ctor
@@ -12,7 +11,7 @@ Equipo::~Equipo()
 }
 
 // METODOS DE MOSTRAR
-string Equipo::MostrarNombre(void){
+std::string Equipo::MostrarNombre(void){
     return this->nombre;
 }
 
@@ -20,11 +19,11 @@ char Equipo::MostrarGrupo(void){
     return this->grupo;
 }
 
-int Equipo::ValidarEquipo(string linea){
+int Equipo::ValidarEquipo(std::string linea){
     int equipo_valido = 0;
     int largo = len_string(linea);
 
-    // SI TERMINA EN ' X', entonces itera para chequear que sea alfabetico
+    // SI TERMINA EN ' X', entonces itera pa00ra chequear que sea alfabetico
     if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
         int i = 0;
         while (equipo_valido == 0 && i < largo - 2){
@@ -49,7 +48,7 @@ int Equipo::ValidarEquipo(string linea){
 }
 
 // METODOS DE ASIGNAR
-void Equipo::AsignarNombre(string nombre){
+void Equipo::AsignarNombre(std::string nombre){
     this->nombre = nombre;
 }
 

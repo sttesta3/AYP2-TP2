@@ -1,15 +1,14 @@
 #ifndef LISTA_H
 #define LISTA_H
 
-#include <tuple>
-#include <string>
+//#include <tuple>
+//#include <string>
 
 #include "Equipo.h"
 #include "partidos.h"
-
 #include "utils.h"
 
-using namespace std;
+// using namespace std;
 
 template <typename Tipo> 
 class Nodo{
@@ -207,7 +206,7 @@ class Lista {
 
         //int EncontrarPosicionPartido(Nodo<Partido>* nuevo_nodo);
 
-        Tipo* BuscarElemento(string busqueda);
+        Tipo* BuscarElemento(std::string busqueda);
 
         // FUNCIONES DE ITERADOR
         void IniciarIterador();
@@ -272,7 +271,7 @@ int Lista<Tipo>::AgregarElemento(Tipo nuevo_elemento){
     Nodo<Tipo> *nuevo_nodo = new Nodo<Tipo>;
     if (!nuevo_nodo){
         delete nuevo_nodo;
-        cerr << "ERROR DE MEMORIA AL AGREGAR NUEVO NODO: " << endl;
+        std::cerr << "ERROR DE MEMORIA AL AGREGAR NUEVO NODO: " << std::endl;
         return 1;
     }
     nuevo_nodo->AsignarContenido(nuevo_elemento);

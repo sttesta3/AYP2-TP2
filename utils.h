@@ -1,12 +1,20 @@
-#ifndef UTILS_H_INCLUDED
-#define UTILS_H_INCLUDED
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <fstream>
+//#include <fstream>
+//#include <string>
 #include <iostream>
-#include <string>
-#include "defs.h"
 
-using namespace std;
+bool divisor_de_fase(std::string input);
+// FUNCIONES DE STRING
+int len_string(std::string a);
+std::string split_string(std::string a);
+bool cmp_string(std::string a, std::string b);
+std::string to_lower(std::string a);
+std::string to_upper(std::string a);
+int comparar_alfabeticamente(std::string a, std::string b);
+bool is_alfa(char a);
+int string_a_int(std::string a);
 
 // MANEJO DE MEMORIA
 /*
@@ -41,22 +49,12 @@ int iterar_fases(Mundial* mundial, char grupo);
 Equipo* buscar_equipo(Mundial* mundial, string nombre);
 int busqueda_binaria(Mundial* mundial, string nombre, int n, int cant_iteraciones);
 */
-bool divisor_de_fase(string input);
+
 /*
 int fase_a_numero(string fase);
 int suma_puntos(Equipo* equipo);
 int mod (float a);
 */
-
-// FUNCIONES DE STRING
-int len_string(string a);
-string split_string(string a);
-bool cmp_string(string a, string b);
-string to_lower(string a);
-string to_upper(string a);
-int comparar_alfabeticamente(string a, string b);
-bool is_alfa(char a);
-int string_a_int(string a);
 
 /*
 // FUNCIONES DE PROGRAMA PRINCIPAL
@@ -116,4 +114,4 @@ void menu_podio(Mundial* mundial);
 void menu_buscar_equipo(string busqueda, Mundial* mundial);
 void menu_puntos(Mundial* mundial);
 */
-#endif // UTILS_H_INCLUDED
+#endif // UTILS_H

@@ -1,9 +1,6 @@
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <tuple>
-
 #include "Mundial.h"
+
+/* EDIT PARA ERROR DE LINKER
 #include "lista.h"
 
 #include "Equipo.h"
@@ -11,7 +8,17 @@
 
 #include "utils.h"
 
-using namespace std;
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <tuple>
+*/
+
+//EDIT POST 
+#include <cstring>
+#include <fstream>
+
+//using namespace std;
 Mundial::Mundial()
 {
     // CONSTRUCTOR
@@ -32,19 +39,19 @@ Mundial::~Mundial()
     delete this->partidos_eliminatoria;
 }
 
-int Mundial::CargarEquipos(string archivo1){
-    ifstream entrada(archivo1);
+int Mundial::CargarEquipos(std::string archivo1){
+    std::ifstream entrada(archivo1);
     if (!entrada){
-        cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << endl;
+        std::cerr << "ERROR AL ABRIR ARCHIVO DE EQUIPOS" << std::endl;
         return 1;
     }
 
-    string linea;
+    std::string linea;
     Equipo nuevo_equipo;
     while (getline(entrada, linea)){
         linea = to_lower(linea);
         if (nuevo_equipo.ValidarEquipo(linea) == 1){
-            cerr << "ERROR AL CARGAR EQUIPO, linea invalida: " << linea << endl;
+            std::cerr << "ERROR AL CARGAR EQUIPO, linea invalida: " << linea << std::endl;
             entrada.close();
             return 1;
         }
@@ -71,77 +78,77 @@ int Mundial::MostrarCantidadEquipos(){
     return this->equipos->MostrarCantElementos();
 }
 
-int Mundial::CargarPartidos(string archivo2){
-    ifstream entrada(archivo2);
+int Mundial::CargarPartidos(std::string archivo2){
+    std::ifstream entrada(archivo2);
     if (!entrada){
-        cerr << "ERROR AL ABRIR ARCHIVO DE PARTIDOS" << endl;
+        std::cerr << "ERROR AL ABRIR ARCHIVO DE PARTIDOS" << std::endl;
         return 1;
     }
 
-    string fase;
-    string linea;
+    std::string fase;
+    std::string linea;
     
     while (getline(entrada, linea)){
         linea = to_lower(linea);
         if (divisor_de_fase(linea))
             fase = linea;
         else {
-            if (cmp_string(fase,"grupos")){
+            if (fase.compare("grupos")){
                 PartidoGrupo nuevo_partido;
-                tuple <string,int,string,int> encontrado = nuevo_partido.ValidarPartido(linea);
-                if (cmp_string(get<0>(encontrado),"\0")){
-                    cerr << "PARTIDO DE FASE DE GRUPOS INVALIDO, linea: " << linea << endl;
+                std::tuple <std::string,int,std::string,int> encontrado = nuevo_partido.ValidarPartido(linea);
+                if (std::get<0>(encontrado).compare("\0")){
+                    std::cerr << "PARTIDO DE FASE DE GRUPOS INVALIDO, linea: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
 
-                Equipo* equipo1 = this->BuscarEquipo(get<0>(encontrado));
+                Equipo* equipo1 = this->BuscarEquipo(std::get<0>(encontrado));
                 if (!equipo1){
-                    cerr << "EQUIPO NO ENCONTRADO: " << get<0>(encontrado) << " Partido: " << linea << endl;
+                    std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<0>(encontrado) << " Partido: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
-                Equipo* equipo2 = this->BuscarEquipo(get<2>(encontrado));
+                Equipo* equipo2 = this->BuscarEquipo(std::get<2>(encontrado));
                 if (!equipo2){
-                    cerr << "EQUIPO NO ENCONTRADO: " << get<2>(encontrado) << " Partido: " << linea << endl;
+                    std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<2>(encontrado) << " Partido: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
                 
-                nuevo_partido.AsignarValores(equipo1,equipo2,get<1>(encontrado),get<3>(encontrado));
+                nuevo_partido.AsignarValores(equipo1,equipo2,std::get<1>(encontrado),std::get<3>(encontrado));
                 this->partidos_grupos->AgregarElemento(nuevo_partido);
             }
             else{
                 PartidoEliminatoria nuevo_partido;
-                tuple <string,int,int,string,int,int> encontrado = nuevo_partido.ValidarPartido(linea);
-                if (cmp_string(get<0>(encontrado),"\0")){
-                    cerr << "PARTIDO DE FASE ELIMINATORIA INVALIDO, linea: " << linea << endl;
+                std::tuple <std::string,int,int,std::string,int,int> encontrado = nuevo_partido.ValidarPartido(linea);
+                if (std::get<0>(encontrado).compare("\0")){
+                    std::cerr << "PARTIDO DE FASE ELIMINATORIA INVALIDO, linea: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
 
-                Equipo* equipo1 = this->BuscarEquipo(get<0>(encontrado));
+                Equipo* equipo1 = this->BuscarEquipo(std::get<0>(encontrado));
                 if (!equipo1){
-                    cerr << "EQUIPO NO ENCONTRADO: " << get<0>(encontrado) << " Partido: " << linea << endl;
+                    std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<0>(encontrado) << " Partido: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
-                Equipo* equipo2 = this->BuscarEquipo(get<3>(encontrado));
+                Equipo* equipo2 = this->BuscarEquipo(std::get<3>(encontrado));
                 if (!equipo2){
-                    cerr << "EQUIPO NO ENCONTRADO: " << get<2>(encontrado) << " Partido: " << linea << endl;
+                    std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<2>(encontrado) << " Partido: " << linea << std::endl;
                     entrada.close();
                     return 1;
                 }
 
-                nuevo_partido.AsignarValores(equipo1,equipo2,get<1>(encontrado),get<4>(encontrado));
-                nuevo_partido.AsignarPenales(get<2>(encontrado),get<5>(encontrado));
+                nuevo_partido.AsignarValores(equipo1,equipo2,std::get<1>(encontrado),std::get<4>(encontrado));
+                nuevo_partido.AsignarPenales(std::get<2>(encontrado),std::get<5>(encontrado));
                 this->partidos_eliminatoria->AgregarElemento(nuevo_partido);
                 
-                if (cmp_string(fase,"final")){
+                if (fase.compare("final")){
                     this->primero = nuevo_partido.MostrarGanador();
                     this->segundo = nuevo_partido.MostrarPerdedor();
                 }
-                else if (cmp_string(fase,"tercer puesto"))
+                else if (fase.compare("tercer puesto"))
                     this->tercero = nuevo_partido.MostrarGanador();
             }
         }
@@ -156,15 +163,15 @@ void Mundial::MostrarMenu(void){
     bool mostrar_menu = true;
 
     while (mostrar_menu){
-        cout << "Opciones (ingresar numero de opcion)" << endl;
-        cout << "1. Listar equipos" << endl;
-        cout << "2. Mostrar los equipos en primer segundo y tercer lugar" << endl;
-        cout << "3. Buscar equipo por nombre" << endl;
-        cout << "4. Mostrar por fase los paises ordenados por puntaje" << endl;
-        cout << "5. Actualizar partido" << endl;
-        cout << "6. Salir" << endl;
+        std::cout << "Opciones (ingresar numero de opcion)" << std::endl;
+        std::cout << "1. Listar equipos" << std::endl;
+        std::cout << "2. Mostrar los equipos en primer segundo y tercer lugar" << std::endl;
+        std::cout << "3. Buscar equipo por nombre" << std::endl;
+        std::cout << "4. Mostrar por fase los paises ordenados por puntaje" << std::endl;
+        std::cout << "5. Actualizar partido" << std::endl;
+        std::cout << "6. Salir" << std::endl;
 
-        char input; cin >> input;
+        char input; std::cin >> input;
         if (int(input) < 49 || int(input) > 57)
             input = '0';
 
@@ -174,7 +181,7 @@ void Mundial::MostrarMenu(void){
         case 2:
             this->Podio();break;
         case 3:
-            { cout << "Ingrese nombre del equipo:" << endl; string busqueda; cin >> busqueda; this->MostrarBuscarEquipo(busqueda); break; }
+            { std::cout << "Ingrese nombre del equipo:" << std::endl; std::string busqueda; std::cin >> busqueda; this->MostrarBuscarEquipo(busqueda); break; }
         case 4: 
             this->MenuPuntos(); break;
         case 5:
@@ -182,32 +189,32 @@ void Mundial::MostrarMenu(void){
         case 6:
             mostrar_menu = false; break;
         default:
-            cout << "Opcion invalida, favor reingresar" << endl; break;
+            std::cout << "Opcion invalida, favor reingresar" << std::endl; break;
         }
     }
 }
 
 void Mundial::ListarEquipos(void){
-    cout << "EQUIPOS" << endl;
+    std::cout << "EQUIPOS" << std::endl;
 
     this->equipos->IniciarIterador();
     while (this->equipos->MostrarIterador() != nullptr){
-        cout << 
+        std::cout << 
         "Grupo: "  << char(toupper(this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo()))  << " " <<
-        "Equipo: " << to_upper(this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) << endl;
+        "Equipo: " << to_upper(this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) << std::endl;
         this->equipos->AvanzarIterador(1);
     }
 }
 
 void Mundial::Podio(void){
-    cout << "PODIO" << endl;
+    std::cout << "PODIO" << std::endl;
 
-    cout << "1ro: " << this->primero->MostrarNombre() << endl;
-    cout << "2do: " << this->segundo->MostrarNombre() << endl;
-    cout << "3ro: " << this->tercero->MostrarNombre() << endl;
+    std::cout << "1ro: " << this->primero->MostrarNombre() << std::endl;
+    std::cout << "2do: " << this->segundo->MostrarNombre() << std::endl;
+    std::cout << "3ro: " << this->tercero->MostrarNombre() << std::endl;
 }
 
-Equipo* Mundial::BuscarEquipo(string busqueda){
+Equipo* Mundial::BuscarEquipo(std::string busqueda){
     /*
     Se realiza busqueda lineal, no se me ocurrio un metodo mejor
     La mayor optimizacion que se me ocurrio (sin iterar la lista) es iterar desde el principio o el final segun primer letra 
@@ -235,14 +242,14 @@ Equipo* Mundial::BuscarEquipo(string busqueda){
         return this->equipos->MostrarIterador()->MostrarDireccion();
 }
 
-void Mundial::MostrarBuscarEquipo(string busqueda){
+void Mundial::MostrarBuscarEquipo(std::string busqueda){
     Equipo* equipo = this->BuscarEquipo(busqueda);
     if (equipo == nullptr)
-        cout << "NO HAY COINCIDENCIAS" << endl;
+        std::cout << "NO HAY COINCIDENCIAS" << std::endl;
     else{
-        cout << "EQUIPO: " << to_upper(equipo->MostrarNombre());
-        cout << "GRUPO: " << char(toupper(equipo->MostrarGrupo()));
-        cout << "FASE HASTA LA QUE LLEGO" << endl;
+        std::cout << "EQUIPO: " << to_upper(equipo->MostrarNombre());
+        std::cout << "GRUPO: " << char(toupper(equipo->MostrarGrupo()));
+        std::cout << "FASE HASTA LA QUE LLEGO" << std::endl;
     }
 }
 void Mundial::MenuPuntos(void){   
@@ -252,7 +259,6 @@ void Mundial::MenuPuntos(void){
 void Mundial::ActualizarPartidos(void){
 
 }
-
 
 /*
 tuple <string, char> Mundial::ValidarEquipo(string linea){

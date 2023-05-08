@@ -1,16 +1,15 @@
 #ifndef EQUIPO_H
 #define EQUIPO_H
 
-#include <string>
-#include <vector>
-
 // #include "fase.h"
 
-using namespace std;
+// EDIT POR LINK
+#include "utils.h"
+
 
 class Equipo {
     private:
-        string nombre;
+        std::string nombre;
         char grupo;
         // vector <class Fase> fases;
 
@@ -20,11 +19,11 @@ class Equipo {
         Equipo();
         ~Equipo();
 
-        int ValidarEquipo(string linea);
-        string MostrarNombre(void);
+        int ValidarEquipo(std::string linea);
+        std::string MostrarNombre(void);
         char MostrarGrupo(void);
         
-        void AsignarNombre(string nombre);
+        void AsignarNombre(std::string nombre);
         void AsignarGrupo(char grupo);
 
 };

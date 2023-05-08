@@ -1,6 +1,5 @@
 #include "Mundial.h"
 
-using namespace std;
 int main(int argc, char* argv[]){
     /*
         Breve descripcion del programa:
@@ -14,13 +13,13 @@ int main(int argc, char* argv[]){
     */
     
     if (argc != 3){     
-        cout << "Uso: ./" << argv[0] << " file1 file2"<< endl;
+        std::cout << "Uso: ./" << argv[0] << " file1 file2"<< std::endl;
         return 1;
     }
 
     Mundial* mundial = new Mundial;
     if (!mundial){        
-        cerr << "ERROR AL CREAR MUNDIAL" << endl;
+        std::cerr << "ERROR AL CREAR MUNDIAL" << std::endl;
         return 1;
     }
 
