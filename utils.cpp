@@ -1,21 +1,19 @@
 #include "utils.h"
-#include <cmath>
 //#include <fstream>
-#include <iostream>
+
 
 bool divisor_de_fase(std::string input){
     return ( input.compare("grupos") || input.compare("octavos") || input.compare("cuartos") || input.compare("semifinales") || input.compare("final") || input.compare("tercer puesto") );
 }
 
 // FUNCIONES DE STRING
-/*
+
 int len_string(std::string a){
     int i = 0;
     while (a[i] != '\0')
         i += 1;
     return i;
 }
-*/
 
 std::string split_string(std::string a){
     std::string output;
@@ -27,26 +25,6 @@ std::string split_string(std::string a){
 
     return output;
 }
-
-/*
-bool cmp_string(std::string a, std::string b){
-    // Devuelve True si son iguales, falso si no
-    bool resultado = false;
-    int largo_a = len_string(a);
-    int largo_b = len_string(b);
-
-    if (largo_a == largo_b){
-        int i = 0;
-        while ((a[i] == b[i]) && i < largo_a)
-            i++;
-
-        if (i == largo_a)
-            resultado = true;
-    }
-
-    return resultado;
-}
-*/
 
 std::string to_lower(std::string a){
     int largo = len_string(a);
@@ -80,10 +58,53 @@ std::string to_upper(std::string a){
         return a;
 }
 
+int string_a_int(std::string a){
+    int resultado = 0;
+    int largo = len_string(a);
+    if (a.compare("-1") == false){
+        for (int i=0; i < largo; i++){
+            if ((int)a[i] >= 48 && (int)a[i] <= 57)
+                resultado += int(((int)a[i] % 48 )* pow(10,largo - 1 - i));
+            else {
+                resultado = -3;
+                i = largo;  // pseudo break
+            }
+        }
+    }
+    else
+        resultado = -1;
+
+    return resultado;
+}
+
 /*
+bool is_alfa(char a){
+    return (((int)a >= 97 && (int)a <= 122)||((int)a == 32)||((int)a == 95));
+}
+
+bool cmp_string(std::string a, std::string b){
+    // Devuelve True si son iguales, falso si no
+    bool resultado = false;
+    int largo_a = len_string(a);
+    int largo_b = len_string(b);
+
+    if (largo_a == largo_b){
+        int i = 0;
+        while ((a[i] == b[i]) && i < largo_a)
+            i++;
+
+        if (i == largo_a)
+            resultado = true;
+    }
+
+    return resultado;
+}
+
+
+*/
 int comparar_alfabeticamente(std::string a, std::string b){
     // int resultado = 0;
-    if ((cmp_string(a,""))||(cmp_string(b,"")))
+    if ((a.compare(""))||b.compare(""))
         return -1;
 
     int i = 0;
@@ -106,30 +127,6 @@ int comparar_alfabeticamente(std::string a, std::string b){
         return -1;
     else
         return 0;
-}
-*/
-
-bool is_alfa(char a){
-    return (((int)a >= 97 && (int)a <= 122)||((int)a == 32)||((int)a == 95));
-}
-
-int string_a_int(std::string a){
-    int resultado = 0;
-    int largo = len_string(a);
-    if (cmp_string(a, "-1") == false){
-        for (int i=0; i < largo; i++){
-            if ((int)a[i] >= 48 && (int)a[i] <= 57)
-                resultado += int(((int)a[i] % 48 )* pow(10,largo - 1 - i));
-            else {
-                resultado = -3;
-                i = largo;  // pseudo break
-            }
-        }
-    }
-    else
-        resultado = -1;
-
-    return resultado;
 }
 
 // MANEJO DE MEMORIA
@@ -461,10 +458,10 @@ Equipo* validar_equipo(string linea){
     bool equipo_valido = true;
     int largo = len_string(linea);
 
-    if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
+    if (isalpha(linea[largo - 1]) && (int)linea[largo - 2] == 32){
         int i = 0;
         while (equipo_valido == true && i < largo - 2){
-            if (is_alfa(linea[i]) == false)
+            if (isalpha(linea[i]) == false)
                 equipo_valido = false;
             i += 1;
         }

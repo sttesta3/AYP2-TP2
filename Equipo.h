@@ -5,6 +5,7 @@
 
 // EDIT POR LINK
 #include "utils.h"
+#include <cstring>
 
 
 class Equipo {

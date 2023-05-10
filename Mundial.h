@@ -1,18 +1,12 @@
 #ifndef MUNDIAL_H
 #define MUNDIAL_H
 
-//#include <string>
-//#include <tuple>
-
 #include "lista.h"
 #include "partidos.h"
 #include "Equipo.h"
+#include "utils.h"
 
-// EDIT PARA ERROR DE LINKER
-// #include "utils.h"
 #include <cmath>
-//#include <iostream>
-//#include <fstream>
 #include <tuple>
 
 class Mundial {

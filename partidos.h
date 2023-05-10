@@ -1,24 +1,33 @@
 #ifndef PARTIDOS_H
 #define PARTIDOS_H
 
-//#include <tuple>
+#include <tuple>
 //#include <string>
 #include "Equipo.h"
 
+/*
+*/
 class Partido 
 {
     public:
-        std::tuple <Equipo*,Equipo*> MostrarEquipos();
-
-        virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
-        virtual std::tuple<int,int> MostrarPuntos(void) = 0;
+        Equipo* MostrarEquipos(bool equipo1);
+        void AsignarEquipo(Equipo* equipo, bool equipo1);
+        void AsignarGoles(int goles, bool equipo1);
+        
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0; 
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
         // virtual tuple <int,int> DevolverPuntos() = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
 
-    private:
+    protected:
+        virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
+        virtual std::tuple<int,int> MostrarPuntos(void) = 0;
+        virtual std::tuple<std::string,std::string> ValidarPartido(std::string linea) = 0;
+        virtual Equipo* MostrarGanador() = 0;
+        virtual Equipo* MostrarPerdedor() = 0;
+        
+    //private:
         Equipo* equipo1;
         Equipo* equipo2;
         int goles1;
@@ -30,24 +39,30 @@ class PartidoGrupo: public Partido{
         PartidoGrupo();
         //~PartidoGrupo();
 
-        //int ValidarPartido(string linea, Mundial* mundial);
-        std::tuple<std::string,int,std::string,int> ValidarPartido(std::string linea);
+        Equipo* MostrarGanador();
+        Equipo* MostrarPerdedor();
+
+        std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
         std::tuple<int,int> MostrarPuntos(void);
+
+        std::tuple<int,int> MostrarGoles(void);
+
 };
 
 class PartidoEliminatoria: public Partido{
     public:
         PartidoEliminatoria();
+        void AsignarPenales(int penales1, int penales2);
+
         // ~PartidoEliminatoria();
-
-        std::tuple<std::string,int,int,std::string,int,int> ValidarPartido(std::string linea);
+        std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        int AsignarPenales(int penales1, int penales2);
-
         std::tuple<int,int> MostrarPuntos(void);
-        Equipo* MostrarGanador(void);
-        Equipo* MostrarPerdedor(void);
+
+        Equipo* MostrarGanador();
+        Equipo* MostrarPerdedor();
+        
     private:
         int penales1;
         int penales2;

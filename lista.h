@@ -266,6 +266,15 @@ void Lista<Tipo>::AvanzarIterador(int ITERACIONES){
 }
 
 template <typename Tipo>
+void Lista<Tipo>::RetrocederIterador(int ITERACIONES){
+    int i = 0;
+    while (this->MostrarIterador() != nullptr && i < ITERACIONES){
+        this->AsignarIterador(this->MostrarIterador()->MostrarAnterior());
+        i += 1;
+    }
+}
+
+template <typename Tipo>
 int Lista<Tipo>::AgregarElemento(Tipo nuevo_elemento){
     // CREAMOS NODO Y ASIGNAMOS VALORES
     Nodo<Tipo> *nuevo_nodo = new Nodo<Tipo>;
@@ -335,7 +344,6 @@ int Lista<Equipo>::PosicionarElemento(Nodo<Equipo>* nuevo_nodo){
 }
 
 
-template <class PartidoGrupo>
 int Lista<PartidoGrupo>::PosicionarElemento(Nodo<PartidoGrupo>* nuevo_nodo){
     if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
         nuevo_nodo->AsignarAnterior(nullptr);
@@ -372,8 +380,8 @@ int Lista<PartidoEliminatoria>::PosicionarElemento(Nodo<PartidoEliminatoria>* nu
         this->ultimo = nuevo_nodo;
     }
 }
-
 */
+
 /*
 template <class Partido>
 int Lista<Partido>::AgregarElemento(tuple <string, int, string, int> nuevo_partido_grupo){

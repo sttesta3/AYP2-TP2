@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     }
 
     Mundial* mundial = new Mundial;
-    if (!mundial){        
+    if (!mundial){
         std::cerr << "ERROR AL CREAR MUNDIAL" << std::endl;
         return 1;
     }
