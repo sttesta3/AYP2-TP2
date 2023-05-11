@@ -55,6 +55,8 @@ int Mundial::CargarEquipos(std::string archivo1){
     entrada.close();
     
     this->DefinirIteraciones();
+
+    this->ListarEquipos();
     return 0;
 }
 
@@ -80,11 +82,14 @@ int Mundial::CargarPartidos(std::string archivo2){
     
     while (getline(entrada, linea)){
         linea = to_lower(linea);
-        if (divisor_de_fase(linea))
+        std::cout << "LINEA PARTIDO: " << linea << std::endl;
+        if (divisor_de_fase(linea)){
             fase = linea;
+            // DEBUG std::cout << "ESTO ES UNA FASE" << std::endl;
+        }
         else {
             std::tuple <std::string,std::string> encontrado;
-            if (fase.compare("grupos")){
+            if (fase.compare("grupos") == 1){
                 PartidoGrupo nuevo_partido;
                 encontrado = nuevo_partido.ValidarPartido(linea);
                 if ( std::get<0>(nuevo_partido.MostrarPuntos() ) == -5){
@@ -106,7 +111,9 @@ int Mundial::CargarPartidos(std::string archivo2){
                 }
 
                 nuevo_partido.AsignarEquipo(equipo1,true); nuevo_partido.AsignarEquipo(equipo2,false);
+                // DEBUG std::cout << "AGREGANDO PG" << std::endl;
                 this->partidos_grupos->AgregarElemento(nuevo_partido);
+                // DEBUG std::cout << "AGREGADO" << std::endl;
             }
             else{
                 PartidoEliminatoria nuevo_partido;
@@ -129,15 +136,18 @@ int Mundial::CargarPartidos(std::string archivo2){
                     return 1;
                 }
 
-                nuevo_partido.AsignarEquipo(equipo1,true);
-                nuevo_partido.AsignarEquipo(equipo2,false);
+                nuevo_partido.AsignarEquipo(equipo1,true); nuevo_partido.AsignarEquipo(equipo2,false);
                 this->partidos_eliminatoria->AgregarElemento(nuevo_partido);
 
-                if (fase.compare("final")){
+                if (fase.compare("final") == 1){
+                    std::tuple <int,int> result = nuevo_partido.MostrarPuntos();
+                    std::cout << "P1: " << std::get<0>(result) << " "<< nuevo_partido.MostrarEquipo(true)->MostrarNombre() << std::endl; 
+                    std::cout << "P2: " << std::get<1>(result) << " "<< nuevo_partido.MostrarEquipo(false)->MostrarNombre() << std::endl; 
+
                     this->primero = nuevo_partido.MostrarGanador();
                     this->segundo = nuevo_partido.MostrarPerdedor();
                 }
-                else if (fase.compare("tercer puesto"))
+                else if (fase.compare("tercer puesto") == 1)
                     this->tercero = nuevo_partido.MostrarGanador();
             }
         }
@@ -150,7 +160,6 @@ int Mundial::CargarPartidos(std::string archivo2){
 // FUNCIONES DE MENU
 void Mundial::MostrarMenu(void){
     bool mostrar_menu = true;
-
     while (mostrar_menu){
         std::cout << "Opciones (ingresar numero de opcion)" << std::endl;
         std::cout << "1. Listar equipos" << std::endl;
@@ -165,6 +174,8 @@ void Mundial::MostrarMenu(void){
             input = '0';
 
         switch ((int)input%48 *((int)input < 58)){
+        case 0: // DEBUG
+            this->ListarPartidos(); break;
         case 1:
             this->ListarEquipos(); break;
         case 2:
@@ -195,6 +206,48 @@ void Mundial::ListarEquipos(void){
     }
 }
 
+void Mundial::ListarPartidos(void){
+    // DEBUG 
+    std::cout << "PG" << std::endl;
+
+    this->partidos_grupos->IniciarIterador();
+    while (this->partidos_grupos->MostrarIterador() != nullptr){
+        std::cout <<  
+        "Eq1: " << this->partidos_grupos->MostrarIterador()->MostrarContenido().MostrarEquipo(true)->MostrarNombre() <<
+        "Eq2: " << this->partidos_grupos->MostrarIterador()->MostrarContenido().MostrarEquipo(false)->MostrarNombre() <<
+        std::endl;
+
+        if (this->partidos_grupos->MostrarIterador()->MostrarContenido().MostrarGanador() == nullptr)
+            std::cout << "EMPATE" << std::endl;
+        else
+            std::cout << "GANO: " << this->partidos_grupos->MostrarIterador()->MostrarContenido().MostrarGanador()->MostrarNombre() << std::endl;
+        this->partidos_grupos->AvanzarIterador(1);
+    }
+    /*DEBUG/
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    std::cout << "ELIM" << std::endl;
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    std::cout << "--------------------------------------------------------------------" << std::endl;
+    */
+    std::cout << "ELIM" << std::endl;
+    this->partidos_eliminatoria->IniciarIterador();
+    while (this->partidos_eliminatoria->MostrarIterador() != nullptr){
+        std::cout <<  
+        "Eq1: " << this->partidos_eliminatoria->MostrarIterador()->MostrarContenido().MostrarEquipo(true)->MostrarNombre() <<
+        "Eq2: " << this->partidos_eliminatoria->MostrarIterador()->MostrarContenido().MostrarEquipo(false)->MostrarNombre() <<
+        std::endl;
+
+        if (this->partidos_eliminatoria->MostrarIterador()->MostrarContenido().MostrarGanador() == nullptr)
+            std::cout << "EMPATE" << std::endl;
+        else
+            std::cout << "GANO: " << this->partidos_eliminatoria->MostrarIterador()->MostrarContenido().MostrarGanador()->MostrarNombre() << std::endl;
+        this->partidos_eliminatoria->AvanzarIterador(1);
+    }
+}
+
 void Mundial::Podio(void){
     std::cout << "PODIO" << std::endl;
 
@@ -214,21 +267,25 @@ Equipo* Mundial::BuscarEquipo(std::string busqueda){
     if (busqueda_normal){
         this->equipos->IniciarIterador();
 
-        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
+        // DEBUG std::cout << "Normal, EQUIPO BUSCADO: " << busqueda << std::endl;
+        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != -1){
+            // DEBUG std::cout << "encontrado: " << this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre() << std::endl;
             this->equipos->AvanzarIterador(1);
         }
     }
     else{
+        // DEBUG std::cout << "Inverso, EQUIPO BUSCADO: " << busqueda << std::endl;
         this->equipos->IniciarIteradorAlUltimo();
 
-        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 0){
+        while (this->equipos->MostrarIterador() != nullptr && comparar_alfabeticamente(busqueda,this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre()) != 1){
+            // DEBUG std::cout << "encontrado: " << this->equipos->MostrarIterador()->MostrarContenido().MostrarNombre() << std::endl;
             this->equipos->RetrocederIterador(1);
         }
     }
     if (!this->equipos->MostrarIterador())
         return nullptr;
     else
-        return this->equipos->MostrarIterador()->MostrarDireccion();
+        return this->equipos->MostrarIterador()->MostrarAnterior()->MostrarDireccion();
 }
 
 void Mundial::MostrarBuscarEquipo(std::string busqueda){
@@ -236,13 +293,13 @@ void Mundial::MostrarBuscarEquipo(std::string busqueda){
     if (equipo == nullptr)
         std::cout << "NO HAY COINCIDENCIAS" << std::endl;
     else{
-        std::cout << "EQUIPO: " << to_upper(equipo->MostrarNombre());
-        std::cout << "GRUPO: " << char(toupper(equipo->MostrarGrupo()));
-        std::cout << "FASE HASTA LA QUE LLEGO" << std::endl;
+        std::cout << "EQUIPO: " << to_upper(equipo->MostrarNombre()) << std::endl;
+        std::cout << "GRUPO: " << char(toupper(equipo->MostrarGrupo())) << std::endl;
+        std::cout << "FASE HASTA LA QUE LLEGO:" << std::endl;
     }
 }
 void Mundial::MenuPuntos(void){   
-
+    
 }
 
 void Mundial::ActualizarPartidos(void){

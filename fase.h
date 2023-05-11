@@ -18,9 +18,8 @@ class Fase
         //virtual void ModificarPartido() = 0;
 
     protected:
+        vector <Partido*> partidos;
 
-    private:
-        // vector <Partido *> partidos;
 };
 
 class FaseGrupos: public Fase{

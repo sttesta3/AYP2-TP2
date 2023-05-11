@@ -47,6 +47,9 @@ class Mundial {
         int ValidarMundial(void);
         void ActualizarPartidos(void);
 
+        // FUNCIONES DEBUG
+        void ListarPartidos(void);
+
 };
 
 #endif // MUNDIAL_H

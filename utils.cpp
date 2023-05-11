@@ -3,7 +3,7 @@
 
 
 bool divisor_de_fase(std::string input){
-    return ( input.compare("grupos") || input.compare("octavos") || input.compare("cuartos") || input.compare("semifinales") || input.compare("final") || input.compare("tercer puesto") );
+    return ( input.compare("grupos") == 1 || input.compare("octavos") == 1 || input.compare("semifinales") == 1 || input.compare("cuartos") == 1 || input.compare("final") == 1 || input.compare("tercer puesto") == 1 );
 }
 
 // FUNCIONES DE STRING
@@ -61,10 +61,10 @@ std::string to_upper(std::string a){
 int string_a_int(std::string a){
     int resultado = 0;
     int largo = len_string(a);
-    if (a.compare("-1") == false){
+    if (cmp_string(a, "-1") == false){
         for (int i=0; i < largo; i++){
             if ((int)a[i] >= 48 && (int)a[i] <= 57)
-                resultado += int(((int)a[i] % 48 )* pow(10,largo - 1 - i));
+                resultado += int(((int)a[i] % 48 )*pow(10,largo - 1 - i));
             else {
                 resultado = -3;
                 i = largo;  // pseudo break
@@ -77,7 +77,7 @@ int string_a_int(std::string a){
     return resultado;
 }
 
-/*
+
 bool is_alfa(char a){
     return (((int)a >= 97 && (int)a <= 122)||((int)a == 32)||((int)a == 95));
 }
@@ -93,37 +93,29 @@ bool cmp_string(std::string a, std::string b){
         while ((a[i] == b[i]) && i < largo_a)
             i++;
 
-        if (i == largo_a)
-            resultado = true;
+        resultado = (i == largo_a);
     }
 
     return resultado;
 }
 
-
-*/
 int comparar_alfabeticamente(std::string a, std::string b){
     // int resultado = 0;
-    if ((a.compare(""))||b.compare(""))
-        return -1;
-
-    int i = 0;
 
     int largo_a = len_string(a);
     int largo_b = len_string(b);
 
-    int ac = int(a[i]);
-    int bc = int(b[i]);
-
-    while (ac == bc && (i < largo_a)&&(i < largo_b)){
+    int i = 0;
+    while (int(a[i]) == int(b[i]) && i < largo_a && i < largo_b)
         i++;
-        ac = int(a[i]);
-        bc = int(b[i]);
-    }
-
-    if (ac > bc)
+    
+    if (a[i] == '\0' && b[i] != '\0')       // TERMINO UNA DE LAS DOS
+        return -1;
+    else if (a[i] != '\0' && b[i] == '\0')
         return 1;
-    else if (ac < bc)
+    else if (int(a[i]) > int(b[i]))         // ANALISIS SINTAXIS
+        return 1;
+    else if (int(a[i]) < int(b[i]))
         return -1;
     else
         return 0;

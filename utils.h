@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <cmath>
-
+#include <cstring>
 
 bool divisor_de_fase(std::string input);
 // FUNCIONES DE STRING
@@ -16,8 +16,9 @@ std::string split_string(std::string a);
 std::string to_lower(std::string a);
 std::string to_upper(std::string a);
 int comparar_alfabeticamente(std::string a, std::string b);
-// bool is_alfa(char a);
+bool is_alfa(char a);
 int string_a_int(std::string a);
+bool cmp_string(std::string a, std::string b);
 
 // MANEJO DE MEMORIA
 /*

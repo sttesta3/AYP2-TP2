@@ -24,10 +24,10 @@ int Equipo::ValidarEquipo(std::string linea){
     int largo = len_string(linea);
 
     // SI TERMINA EN ' X', entonces itera pa00ra chequear que sea alfabetico
-    if (isalpha(linea[largo - 1]) && (int)linea[largo - 2] == 32){
+    if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
         int i = 0;
         while (equipo_valido == 0 && i < largo - 2){
-            if (!isalpha(linea[i]))
+            if (!is_alfa(linea[i]))
                 equipo_valido = 1;
             i += 1;
         }

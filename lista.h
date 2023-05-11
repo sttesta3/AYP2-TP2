@@ -7,6 +7,7 @@
 #include "Equipo.h"
 #include "partidos.h"
 #include "utils.h"
+#include <cstring>
 
 // using namespace std;
 
@@ -114,19 +115,11 @@ class Lista {
 
         //int EncontrarPosicionElemento(Nodo<Tipo>* nuevo_nodo);
         int PosicionarElemento(Nodo<Equipo>* nuevo_nodo){
-            bool busqueda_normal = (nuevo_nodo->MostrarContenido().MostrarNombre()[0] < 110);
-            if (busqueda_normal){
-                this->IniciarIterador();
-                // DEBUG cout << "ITERADOR INICIADO" << endl;
-                while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != -1)
-                    this->AvanzarIterador(1);
-            }
-            else{
-                this->IniciarIteradorAlUltimo();
-
-                while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != 1)
-                    this->RetrocederIterador(1);
-            }
+            
+            this->IniciarIterador();
+            // DEBUG cout << "ITERADOR INICIADO" << endl;
+            while (this->MostrarIterador() != nullptr && comparar_alfabeticamente(nuevo_nodo->MostrarContenido().MostrarNombre(),this->iterador->MostrarContenido().MostrarNombre()) != -1)
+                this->AvanzarIterador(1); 
 
             // ASIGNAMOS SEGUN SEA EL CASO (se hardcodea demas para evitar problemas con las puntas de la lista)
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
@@ -165,6 +158,7 @@ class Lista {
         }
 
         int PosicionarElemento(Nodo<PartidoGrupo>* nuevo_nodo){
+            std::cout << "AGREGANDO PG NUEVO" << std::endl;
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
                 nuevo_nodo->AsignarAnterior(nullptr);
                 nuevo_nodo->AsignarSiguiente(nullptr);
@@ -181,10 +175,13 @@ class Lista {
             }
 
             this->cant_elementos += 1;
+            std::cout << "AGREGADO PG" << std::endl;
             return 0;
         }
 
         int PosicionarElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
+            // DEBUG
+            std::cout << "AGREGANDO ELIM NUEVA" << std::endl;
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
                 nuevo_nodo->AsignarAnterior(nullptr);
                 nuevo_nodo->AsignarSiguiente(nullptr);
@@ -199,7 +196,8 @@ class Lista {
                 (nuevo_nodo->MostrarAnterior())->AsignarSiguiente(nuevo_nodo);
                 this->ultimo = nuevo_nodo;
             }
-
+            // DEBUG
+            std::cout << "AGREGANDA" << std::endl;
             this->cant_elementos += 1;
             return 0;
         }

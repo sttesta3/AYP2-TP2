@@ -39,15 +39,15 @@ class PartidoGrupo: public Partido{
         PartidoGrupo();
         //~PartidoGrupo();
 
-        Equipo* MostrarGanador();
-        Equipo* MostrarPerdedor();
-
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
+        
         std::tuple<int,int> MostrarPuntos(void);
-
         std::tuple<int,int> MostrarGoles(void);
-
+        Equipo* MostrarEquipo(bool equipo1);
+        Equipo* MostrarGanador();
+        Equipo* MostrarPerdedor();
+        
 };
 
 class PartidoEliminatoria: public Partido{
@@ -58,8 +58,9 @@ class PartidoEliminatoria: public Partido{
         // ~PartidoEliminatoria();
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
-        std::tuple<int,int> MostrarPuntos(void);
 
+        std::tuple<int,int> MostrarPuntos(void);
+        Equipo* MostrarEquipo(bool equipo1);
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
         
