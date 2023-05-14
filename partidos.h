@@ -14,6 +14,7 @@ class Partido
         void AsignarGoles(int goles, bool equipo1);
 
         virtual std::tuple<int,int> MostrarPuntos() = 0;
+        // virtual int CalcularPuntaje(Equipo* equipo) = 0;
         virtual Equipo* MostrarGanador() = 0;
         virtual Equipo* MostrarPerdedor() = 0;
 
@@ -35,6 +36,8 @@ class Partido
         Equipo* equipo2;
         int goles1;
         int goles2;
+
+        bool original_de_archivo;
 };
 
 class PartidoGrupo: public Partido{

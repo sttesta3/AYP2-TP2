@@ -16,7 +16,6 @@ class Mundial {
     private:
         Lista <Equipo> *equipos;
         Lista <Partido*> *partidos;
-        int MAXIMO_ITERACIONES;
 
         Equipo *primero;
         Equipo *segundo;
@@ -35,11 +34,11 @@ class Mundial {
         // tuple <string, char> ValidarEquipo(string linea);
         
         int MostrarCantidadEquipos(void);
-        void DefinirIteraciones();
         Equipo* BuscarEquipo(std::string busqueda);
         
         // FUNCIONES DE MENU
         void Menu();
+        void FiguraAscii1(void);
         void MostrarMenu(void);
         void ListarEquipos(void);
         void Podio(void);
@@ -55,6 +54,7 @@ class Mundial {
 
         // FUNCIONES DEBUG
         void ListarPartidos(void);
+        //void ListarCantFasesPorEquipo(void);
 
 };
 

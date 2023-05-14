@@ -158,7 +158,7 @@ class Lista {
         }
 
         int PosicionarElemento(Nodo<Partido*>* nuevo_nodo){
-            std::cout << "AGREGANDO partido NUEVO" << std::endl;
+            // DEBUG std::cout << "AGREGANDO partido NUEVO" << std::endl;
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
                 nuevo_nodo->AsignarAnterior(nullptr);
                 nuevo_nodo->AsignarSiguiente(nullptr);
@@ -175,7 +175,7 @@ class Lista {
             }
 
             this->cant_elementos += 1;
-            std::cout << "AGREGADO PG" << std::endl;
+            // DEBUG std::cout << "AGREGADO PG" << std::endl;
             return 0;
         }
 

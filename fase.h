@@ -16,13 +16,28 @@ class Fase
         bool EliminarPartido(Partido* partido);
         void AsignarFase(std::string fase);
 
-        //int CalcularPuntaje();
-        //bool PasoFase();
+        std::string MostrarFase();
+        //virtual int CalcularPuntaje(Equipo* equipo) = 0;
+        //virtual bool PasoFase(Equipo* equipo) = 0;
 
-    private:
+    protected:
         std::vector <Partido*> partidos;
         std::string fase;
-        //std::vector <Partido*>::iterator iterador;
         
 };
+
+/*
+class FaseGrupo : public Fase{
+    public:
+        int CalcularPuntaje(Equipo* equipo);
+        bool PasoFase(Equipo* equipo);
+};
+
+class FaseEliminatoria: public Fase{
+    public:
+        int CalcularPuntaje(Equipo* equipo);
+        bool PasoFase(Equipo* equipo);
+};
+*/
+
 #endif // FASE_H

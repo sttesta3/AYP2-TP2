@@ -10,6 +10,7 @@ class Partido;
 // EDIT POR LINK
 #include <cstring>
 #include <vector>
+#include <tuple>
 
 #include "utils.h"
 
@@ -19,6 +20,7 @@ class Equipo {
         std::string nombre;
         char grupo;
         std::vector <Fase*> fases;
+        bool original_de_archivo;
 
     protected:
 
@@ -34,6 +36,10 @@ class Equipo {
         void AsignarGrupo(char grupo);
 
         void AgregarPartido(Partido* partido, std::string fase);
+
+        bool ValidarMundialEquipo(bool verbose);
+        std::tuple <bool,bool,bool,bool,bool,bool> MostrarFasesExistentes();
+        int BuscarFase(std::string fase);
 };
 
 #endif // EQUIPO_H

@@ -14,9 +14,19 @@ Fase::~Fase()
     //dto
 }
 
+std::string
+Fase::MostrarFase(void){
+    return this->fase;
+}
+
 void
 Fase::AgregarPartido(Partido* partido){
     this->partidos.push_back(partido);
+}
+
+void 
+Fase::AsignarFase(std::string fase){
+    this->fase = fase;
 }
 
 bool 
@@ -49,13 +59,29 @@ Fase::EliminarPartido(Partido* partido){
     return true;
 }
 
-void 
-Fase::AsignarFase(std::string fase){
-    this->fase = fase;
+/* EDIT RECIEN
+int FaseGrupo::CalcularPuntaje(Equipo* equipo){
+    int CANT_PARTIDOS = this->partidos.size();
+    int puntos = 0;
+
+    for (int i = 0; i < CANT_PARTIDOS; i++){
+        bool equipo1 = (this->partidos[0]->MostrarEquipo(true) == equipo);
+        int posicion = 0 + 1*(!equipo1);
+
+        puntos += std::get<posicion>(this->partidos[0]->MostrarPuntos());
+    }
+    return puntos;
 }
-/*
-int Fase::CalcularPuntaje(){
-    
+
+int FaseEliminatoria::CalcularPuntaje(Equipo* equipo){
+    bool equipo1 = (this->partidos[0]->MostrarEquipo(true) == equipo);
+    int posicion = 0 + 1*(!equipo1);
+
+    return std::get<posicion>(this->partidos[0]->MostrarPuntos());
+}
+
+bool FaseGrupo::PasoFase(Equipo* equipo){
+    bool
 }
 */
 

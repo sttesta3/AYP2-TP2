@@ -78,8 +78,10 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
         partido_valido = false;
     }
 
+    /* DEBUG
     for (int i=0; i < 4;i++)
         std::cout << "I:" << i << " " << argv[i] << std::endl;
+    */
         
     // VALIDAR GOLES
     if (std::stoi(argv[1]) < 0 || std::stoi(argv[3]) < 0){
@@ -92,6 +94,7 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
     if (partido_valido){
         std::get<0>(resultado) = argv[0]; std::get<1>(resultado) = argv[2];
         this->AsignarGoles(std::stoi(argv[1]),true);  this->AsignarGoles(std::stoi(argv[3]),false);
+        this->original_de_archivo = true;
     }
     else{
         std::get<0>(resultado) = nullptr; std::get<1>(resultado) = nullptr; 
