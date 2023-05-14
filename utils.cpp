@@ -1,6 +1,23 @@
 #include "utils.h"
 //#include <fstream>
 
+int fase_a_numero(std::string fase){
+    int resultado;
+    if (fase.compare("grupos") == 1)
+        resultado = 0;
+    else if (fase.compare("octavos") == 1)
+        resultado = 1;
+    else if (fase.compare("cuartos") == 1)
+        resultado = 2;
+    else if (fase.compare("semifinales") == 1)
+        resultado = 3;
+    else if (fase.compare("tercer puesto") == 1)
+        resultado = 4;
+    else if (fase.compare("final") == 1)
+        resultado = 5;
+
+    return resultado;
+}
 
 bool divisor_de_fase(std::string input){
     return ( input.compare("grupos") == 1 || input.compare("octavos") == 1 || input.compare("semifinales") == 1 || input.compare("cuartos") == 1 || input.compare("final") == 1 || input.compare("tercer puesto") == 1 );

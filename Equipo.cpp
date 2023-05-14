@@ -1,4 +1,3 @@
-// #include <string> EDIT LINKER
 #include "Equipo.h"
 
 Equipo::Equipo(){
@@ -54,5 +53,33 @@ void Equipo::AsignarNombre(std::string nombre){
 
 void Equipo::AsignarGrupo(char grupo){
     this->grupo = grupo;
+}
+
+
+void Equipo::AgregarPartido(Partido* partido, std::string fase){
+    if (fase.compare("grupos") == 1){
+        // SI ESTA VACIO, CREAR FASE
+        if (this->fases.size() == 0){
+            Fase* nuevo_grupos = new Fase;
+            this->fases.push_back(nuevo_grupos);
+            nuevo_grupos->AsignarFase(fase);
+        }
+        this->fases[0]->AgregarPartido(partido);
+    }
+    else {
+        // LOS EQUIPOS TIENEN SOLO UN PARTIDO DE ELIMINATORIA, POR LO TANTO SIEMPRE SERA NUEVO
+        // SE TOMARON COMO BASE ALGUNO DE LOS EJEMPLOS DE MicrosoftLearn
+        // https://learn.microsoft.com/es-es/cpp/standard-library/vector-class?view=msvc-170#insert 
+
+        Fase* nueva_eliminatoria = new Fase;
+        nueva_eliminatoria->AgregarPartido(partido);
+        nueva_eliminatoria->AsignarFase(fase);
+
+        int fase_numerica = fase_a_numero(fase);
+        if (int(this->fases.size()) < fase_numerica)
+            this->fases.push_back(nueva_eliminatoria);
+        else 
+            this->fases.insert(this->fases.begin() + fase_numerica, nueva_eliminatoria);
+    }
 }
 

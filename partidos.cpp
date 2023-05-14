@@ -1,12 +1,12 @@
 #include "partidos.h"
-#include "Equipo.h"
+//#include "Equipo.h"
 
 // INCLUDE POR ERROR DE LINKER
-#include <tuple>
-#include <string>
+//#include <tuple>
+//#include <string>
 
 //Partido::Partido(){}
-// Partido::~Partido(){}
+//Partido::~Partido(){}
 PartidoGrupo::PartidoGrupo():Partido(){}
 //PartidoGrupo::~PartidoGrupo():Partido(){}
 PartidoEliminatoria::PartidoEliminatoria():Partido(){}

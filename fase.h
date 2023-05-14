@@ -2,37 +2,27 @@
 #define FASE_H
 
 #include <vector>
-#include "partidos.h"
+#include <string>
+//#include "partidos.h"
+class Partido;
 
 class Fase
 {
     public:
-        /*
         Fase();
-        ~Fase();
-        */
-        //void AgregarPartido();
-        //void EliminarPartido();
-        //virtual int CalcularPuntaje() = 0;
-        //virtual int AgregarPartido() = 0;
-        //virtual void ModificarPartido() = 0;
+        ~Fase();           
 
-    protected:
-        vector <Partido*> partidos;
+        void AgregarPartido(Partido* partido);
+        bool EliminarPartido(Partido* partido);
+        void AsignarFase(std::string fase);
 
-};
-
-class FaseGrupos: public Fase{
-    public:
+        //int CalcularPuntaje();
+        //bool PasoFase();
 
     private:
-
-};
-
-class FaseEliminatoria: public Fase{
-    public:
-
-    private:
-
+        std::vector <Partido*> partidos;
+        std::string fase;
+        //std::vector <Partido*>::iterator iterador;
+        
 };
 #endif // FASE_H

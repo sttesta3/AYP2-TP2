@@ -1,18 +1,24 @@
 #ifndef EQUIPO_H
 #define EQUIPO_H
 
-// #include "fase.h"
+#include "fase.h"
+//class Fase;
+
+//#include "partidos.h"
+class Partido;
 
 // EDIT POR LINK
-#include "utils.h"
 #include <cstring>
+#include <vector>
+
+#include "utils.h"
 
 
 class Equipo {
     private:
         std::string nombre;
         char grupo;
-        // vector <class Fase> fases;
+        std::vector <Fase*> fases;
 
     protected:
 
@@ -27,6 +33,7 @@ class Equipo {
         void AsignarNombre(std::string nombre);
         void AsignarGrupo(char grupo);
 
+        void AgregarPartido(Partido* partido, std::string fase);
 };
 
 #endif // EQUIPO_H

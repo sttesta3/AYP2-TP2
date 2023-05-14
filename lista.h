@@ -1,13 +1,13 @@
 #ifndef LISTA_H
 #define LISTA_H
 
-//#include <tuple>
-//#include <string>
+#include <tuple>
+#include <string>
+#include <cstring>
 
 #include "Equipo.h"
 #include "partidos.h"
 #include "utils.h"
-#include <cstring>
 
 // using namespace std;
 
@@ -157,7 +157,30 @@ class Lista {
             return 0;
         }
 
-        int PosicionarElemento(Nodo<PartidoGrupo>* nuevo_nodo){
+        int PosicionarElemento(Nodo<Partido*>* nuevo_nodo){
+            std::cout << "AGREGANDO partido NUEVO" << std::endl;
+            if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(nullptr);
+
+                this->inicio = nuevo_nodo;
+                this->ultimo = nuevo_nodo;
+            }
+            else{
+                nuevo_nodo->AsignarAnterior(nullptr);
+                nuevo_nodo->AsignarSiguiente(this->inicio);
+
+                (nuevo_nodo->MostrarSiguiente())->AsignarAnterior(nuevo_nodo);
+                this->inicio = nuevo_nodo;
+            }
+
+            this->cant_elementos += 1;
+            std::cout << "AGREGADO PG" << std::endl;
+            return 0;
+        }
+
+/*
+        int PosicionarElemento(Nodo<PartidoGrupo*>* nuevo_nodo){
             std::cout << "AGREGANDO PG NUEVO" << std::endl;
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
                 nuevo_nodo->AsignarAnterior(nullptr);
@@ -179,7 +202,7 @@ class Lista {
             return 0;
         }
 
-        int PosicionarElemento(Nodo<PartidoEliminatoria>* nuevo_nodo){
+        int PosicionarElemento(Nodo<PartidoEliminatoria*>* nuevo_nodo){
             // DEBUG
             std::cout << "AGREGANDO ELIM NUEVA" << std::endl;
             if (this->MostrarCantElementos() == 0){                 // PRIMER ELEMENTO
@@ -201,7 +224,7 @@ class Lista {
             this->cant_elementos += 1;
             return 0;
         }
-
+*/
         //int EncontrarPosicionPartido(Nodo<Partido>* nuevo_nodo);
 
         Tipo* BuscarElemento(std::string busqueda);

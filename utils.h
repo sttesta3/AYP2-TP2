@@ -1,14 +1,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-//#include <fstream>
-//#include <string>
-
 #include <iostream>
 #include <cmath>
 #include <cstring>
 
 bool divisor_de_fase(std::string input);
+int fase_a_numero(std::string fase);
 // FUNCIONES DE STRING
 int len_string(std::string a);
 std::string split_string(std::string a);

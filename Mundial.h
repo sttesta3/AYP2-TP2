@@ -2,18 +2,20 @@
 #define MUNDIAL_H
 
 #include "lista.h"
-#include "partidos.h"
 #include "Equipo.h"
+//#include "fase.h"
+#include "partidos.h"
 #include "utils.h"
 
 #include <cmath>
 #include <tuple>
+#include <cstring>
+#include <fstream>
 
 class Mundial {
     private:
         Lista <Equipo> *equipos;
-        Lista <PartidoGrupo> *partidos_grupos;
-        Lista <PartidoEliminatoria> *partidos_eliminatoria;
+        Lista <Partido*> *partidos;
         int MAXIMO_ITERACIONES;
 
         Equipo *primero;
@@ -44,8 +46,12 @@ class Mundial {
         void MostrarBuscarEquipo(std::string busqueda);
         void MenuPuntos(void);
 
-        int ValidarMundial(void);
-        void ActualizarPartidos(void);
+        void AgregarPartido(void);
+        void ActualizarPartido(void);
+        void BorrarPartido(void);
+
+        bool ValidarMundial(bool verbose);
+        bool Guardado();
 
         // FUNCIONES DEBUG
         void ListarPartidos(void);
