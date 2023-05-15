@@ -345,18 +345,20 @@ int Mundial::AgregarPartido(void){
     input = "Algo random para que itere";
     while (!divisor_de_fase(input)){
         std::cout << "Ingrese fase del partido a agregar: " << std::endl; std::cin >> input;
+        if (!divisor_de_fase(input))
+            std::cout << "Invalido, favor reingresar" << std::endl;
     }
     fase = input;
 
     // SOLICITAR EQUIPOS
-    Equipo *equipo1 = this->SolicitarEquipo();
+    Equipo *equipo1 = this->SolicitarOCrearEquipo();
     if (!equipo1){
-        std::cerr << "No se encontro/Creo equipo 1" << std::endl
+        std::cerr << "No se encontro/Creo equipo 1" << std::endl;
         return 1;
     }
-    Equipo *equipo2 = this->SolicitarEquipo();
+    Equipo *equipo2 = this->SolicitarOCrearEquipo();
     if (!equipo1){
-        std::cerr << "No se encontro/Creo equipo 1" << std::endl
+        std::cerr << "No se encontro/Creo equipo 1" << std::endl;
         return 1;
     }
 
@@ -381,7 +383,7 @@ int Mundial::AgregarPartido(void){
     return 0;
 }
 
-Equipo* Mundial::SolicitarEquipo(){
+Equipo* Mundial::SolicitarOCrearEquipo(){
     bool equipo_encontrado = false;
     std::string input;
 
@@ -452,12 +454,135 @@ int Mundial::CargarEquipo(Equipo equipo){
 }
 */
 
-void Mundial::ActualizarPartido(void){
+int Mundial::ActualizarPartido(void){
+    std::string fase;
+    bool solicitar_valores = true;
+    Equipo* equipo1;
+    Equipo* equipo2;
+    Partido* partido_a_actualizar;
+    while (solicitar_valores){
+        // Solicitar fase
+        std::string input = "Evitando el error de capa 8, entre teclado y silla";
+        while (!divisor_de_fase(input)){
+            std::cout << "Ingrese fase del partido a modificar: " << std::endl; std::cin >> input;
+            if (!divisor_de_fase(input))
+                std::cout << "Invalido, favor reingresar" << std::endl;
+        }
+        fase = input;
 
+        // Buscar equipo1 (si existe error, permite salir sin modificar)
+        equipo1 = this->SolicitarEquipo(fase);
+        solicitar_valores = (equipo1 != nullptr);
+        if (!solicitar_valores)
+            return 1;
+
+        // Buscar equipo2 (si existe error, permite salir sin modificar)
+        if (solicitar_valores)
+            equipo2 = this->SolicitarEquipo(fase);
+        solicitar_valores = (equipo2 != nullptr);
+        
+        if (!solicitar_valores)
+            return 1;
+        else {
+            // Buscar Partido
+            partido_a_actualizar = equipo1->BuscarPartido(fase, equipo2);
+            if (!partido_a_actualizar){
+                std::cout << "No se encontro el partido, volviendo al menu..." << std::endl;
+                return 1;                
+            }
+            else{   // Punto de no retorno
+                partido_a_actualizar->SolicitarValores(equipo1,equipo2,equipo1->MostrarNombre(),equipo2->MostrarNombre());
+                solicitar_valores = false;
+            }    
+        }
+    }
+    return 0;
 }
 
-void Mundial::EliminarPartido(void){
+Equipo* Mundial::SolicitarEquipo(std::string fase){
+    std::string input;
+    Equipo* equipo = nullptr;
+    bool salir = false;
+    while (!equipo && !salir){
+        std::cout << "Ingrese nombre del equipo: " << std::endl; std::cin >> input;
+        equipo = this->BuscarEquipo(input);
+        if (!equipo)
+            std::cout << "Equipo no encontrado, favor reingresar" << std::endl;
+        else if (!equipo->TieneFase(fase)){
+            std::cout << equipo->MostrarNombre() << " no tiene la fase especificada." << std::endl;
+            bool decision_irse_quedarse = false;
+            while (!decision_irse_quedarse){
+                std::cout << "1. Volver a ingresar equipo" << std::endl;
+                std::cout << "2. Salir" << std::endl;
 
+                if (input.compare("1") == 1){
+                    decision_irse_quedarse = true; equipo = nullptr;
+                }
+                else if (input.compare("2") == 1){
+                    decision_irse_quedarse = true; equipo = nullptr; salir = true;
+                }
+                else
+                    std::cout << "Opcion invalida, favor reingresar" << std::endl;
+
+            }
+        }   
+    }
+
+    return equipo;
+}
+    
+
+int Mundial::EliminarPartido(void){
+    // Quita el partido de los vectores de fases de ambos equipos. Modifica los goles a -5, con esto indicamos que el partido debe borrarse
+    // Se distingue partido de grupo/eliminatoria por si tienen penales o no (tell dont ask)
+    // Luego en el borrado se busca en el archivo fase, linea (entre el valor de la linea y linea - cant. elementos borrados)
+
+    std::string fase;
+    bool solicitar_valores = true;
+    Equipo* equipo1;
+    Equipo* equipo2;
+    Partido* partido_a_eliminar;
+    while (solicitar_valores){
+        // Solicitar fase
+        std::string input = "Evitando el error de capa 8, entre teclado y silla";
+        while (!divisor_de_fase(input)){
+            std::cout << "Ingrese fase del partido a eliminar: " << std::endl; std::cin >> input;
+            if (!divisor_de_fase(input))
+                std::cout << "Invalido, favor reingresar" << std::endl;
+        }
+        fase = input;
+
+        // Buscar equipo1 (si existe error, permite salir sin modificar)
+        equipo1 = this->SolicitarEquipo(fase);
+        solicitar_valores = (equipo1 != nullptr);
+        if (!solicitar_valores)
+            return 1;
+
+        // Buscar equipo2 (si existe error, permite salir sin modificar)
+        if (solicitar_valores)
+            equipo2 = this->SolicitarEquipo(fase);
+        solicitar_valores = (equipo2 != nullptr);
+        
+        if (!solicitar_valores)
+            return 1;
+        else {
+            // Buscar Partido
+            partido_a_eliminar = equipo1->BuscarPartido(fase, equipo2);
+            if (!partido_a_eliminar){
+                std::cout << "No se encontro el partido, volviendo al menu..." << std::endl;
+                return 1;                
+            }
+            else{   // Punto de no retorno
+                partido_a_eliminar->AsignarGoles(-5,true); partido_a_eliminar->AsignarGoles(-5,false);
+                if (!equipo1->EliminarPartido(partido_a_eliminar,fase) || !equipo2->EliminarPartido(partido_a_eliminar,fase)){
+                    std::cerr << "ERROR DESCONOCIDO AL ELIMINAR PARTIDO" << std::endl;
+                }
+                solicitar_valores = false;
+            }    
+        }
+    }
+
+    return 0;
 }
 
 bool Mundial::ValidarMundial(bool verbose){

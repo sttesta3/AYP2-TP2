@@ -85,6 +85,20 @@ void Equipo::AgregarPartido(Partido* partido, std::string fase){
     }
 }
 
+bool Equipo::EliminarPartido(Partido* partido, std::string fase){
+    int i = 0;
+    int POSICION_FASE = this->BuscarFase(fase);
+    int CANT_PARTIDOS = int(this->fases[POSICION_FASE]->partidos.size());
+
+    while (i < CANT_PARTIDOS && this->fases[POSICION_FASE]->partidos[i] != partido)
+        i += 1;
+
+    if (i != CANT_PARTIDOS)
+        this->fases[POSICION_FASE]->partidos.erase(this->fases[POSICION_FASE]->partidos.begin() + i);
+
+    return (i != CANT_PARTIDOS);
+}
+
 bool Equipo::ValidarMundialEquipo(bool verbose){
     //std::tuple <bool,bool,bool,bool,bool,bool> fases_existentes = this->MostrarFasesExistentes();
     
@@ -161,6 +175,49 @@ int Equipo::MostrarFaseFinal(){
         resultado = 0;
 
     return resultado;
+}
+
+bool Equipo::TieneFase(std::string fase){
+    bool resultado = false;
+    std::tuple <bool,bool,bool,bool,bool,bool> fases_existentes = this->MostrarFasesExistentes();
+
+    if (fase.compare("grupos") == 1 && std::get<0>(fases_existentes))
+        resultado = true;
+    else if (fase.compare("octavos") == 1 && std::get<1>(fases_existentes))
+        resultado = true;
+    else if (fase.compare("cuartos") == 1 && std::get<2>(fases_existentes))
+        resultado = true;
+    else if (fase.compare("semifinales") == 1 && std::get<3>(fases_existentes))
+        resultado = true;
+    else if (fase.compare("tercer puesto") == 1 && std::get<4>(fases_existentes))
+        resultado = true;
+    else if (fase.compare("final") == 1 && std::get<5>(fases_existentes))
+        resultado = true;
+
+    return resultado;
+}
+
+Partido* Equipo::BuscarPartido(std::string fase, Equipo* rival){
+    int CANT_PARTIDOS = int(this->fases[this->BuscarFase(fase)]->partidos.size());
+    int i = 0;
+
+    Partido* encontrado = nullptr;
+    while (i < CANT_PARTIDOS && !encontrado){
+        // Compara rival contra el equipo que no coincide con su nombre. Si encuentra coincidencia, es el partido buscado
+        if ( this->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1 ){
+            if (rival->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) == 1)
+                encontrado = this->fases[this->BuscarFase(fase)]->partidos[i];
+        }
+        else{
+            if (rival->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1)
+                encontrado = this->fases[this->BuscarFase(fase)]->partidos[i];
+        }
+
+        if (!encontrado)
+            i += 1;
+    }
+
+    return encontrado;
 }
 
 void Equipo::NoEsOriginal(){

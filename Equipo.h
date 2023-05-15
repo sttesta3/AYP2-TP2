@@ -41,10 +41,13 @@ class Equipo {
         void AsignarGrupo(char grupo);
 
         void AgregarPartido(Partido* partido, std::string fase);
+        bool EliminarPartido(Partido* partido, std::string fase);
 
         bool ValidarMundialEquipo(bool verbose);
         std::tuple <bool,bool,bool,bool,bool,bool> MostrarFasesExistentes();
+        bool TieneFase(std::string fase);
         int BuscarFase(std::string fase);
+        Partido* BuscarPartido(std::string fase, Equipo* rival);
         int CalcularPuntajeGrupos();
 
         void NoEsOriginal(void);

@@ -16,6 +16,7 @@ class Mundial {
     private:
         Lista <Equipo> *equipos;
         Lista <Partido*> *partidos;
+        std::vector <Equipo*> grupos;
 
         Equipo *primero;
         Equipo *segundo;
@@ -30,7 +31,8 @@ class Mundial {
         // FUNCIONES DE MEMORIA
         int CargarEquipos(std::string archivo1);
         int CargarPartidos(std::string archivo2);
-        Equipo* SolicitarEquipo(void);
+        Equipo* SolicitarOCrearEquipo(void);
+        Equipo* SolicitarEquipo(std::string fase);
         // tuple <string, char> ValidarEquipo(string linea);
         
         int MostrarCantidadEquipos(void);

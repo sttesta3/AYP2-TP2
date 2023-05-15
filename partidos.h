@@ -42,8 +42,6 @@ class Partido
         int goles1;
         int goles2;
 
-        bool original_de_archivo;
-        bool editado;
         int linea;
 };
 
@@ -61,6 +59,7 @@ class PartidoGrupo: public Partido{
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
         void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
+
 };
 
 class PartidoEliminatoria: public Partido{
@@ -77,7 +76,6 @@ class PartidoEliminatoria: public Partido{
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
         void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
-
         
     private:
         int penales1;

@@ -27,12 +27,17 @@ void Partido::AsignarGoles(int goles, bool equipo1){
 }
 
 void Partido::AsignarLinea(int linea){
+    // Con esta informacion es suficiente para realizar el guardado en el archivo de texto.
+    // Se iteran los partidos y se compara contra la info en la linea mencionada.
+    // Si hay diferencia -> el partido ha sido actualizado y debe actualizarse en el archivo
+    // Si la linea es -1, hay que encontrar la fase mencionada y agregar una linea con esta informacion
+    // Nota: primero deben de actualizarse los partidos, despues eliminar los que se deban eliminar y
+    // finalmente agregar los nuevos. Debido a que hacerlo en el sentido inverso modificaria el orden de las lineas
+    // Si ya se, mucho texto
     this->linea = linea;
 }
 
 void Partido::NoEsOriginal(){
-    this->original_de_archivo = false;
-    this->editado = false;
     this->linea = -1;
 }
 
@@ -104,8 +109,6 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
     if (partido_valido){
         std::get<0>(resultado) = argv[0]; std::get<1>(resultado) = argv[2];
         this->AsignarGoles(std::stoi(argv[1]),true);  this->AsignarGoles(std::stoi(argv[3]),false);
-        this->original_de_archivo = true;
-        this->editado = false;
     }
     else{
         std::get<0>(resultado) = nullptr; std::get<1>(resultado) = nullptr; 
