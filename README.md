@@ -1,9 +1,6 @@
 # AYP2-TP2
 ## TP2 AYP2 - El error de La'eeb, la venganza de La'eebb
 
-### NOTAS IMPORTANTES
-#### Se realizo polimorfismo de partidos, debido a que se interpreto que a eso se referian en la consigna (Una fase no guarda penales, lo guardan sus partidos). Y en si, los metodos son los mismos tanto para fase de grupos o de eliminatoria (Calcular puntaje y determinar si el equipo paso o no). Y creo que esos casos pueden resolverse con una sobrecarga de operadores ()
-
 ### LOGICA INTERNA
 #### El programa contiene una lista de equipos y una lista de partidos
 #### Los equipos tienen un vector de fases que contiene un vector de partidos con punteros a los partidos en la lista
