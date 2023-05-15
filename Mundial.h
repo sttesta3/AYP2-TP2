@@ -30,12 +30,14 @@ class Mundial {
 
         // FUNCIONES DE MEMORIA
         int CargarEquipos(std::string archivo1);
+        void AgregarGrupo(Equipo* equipo);
         int CargarPartidos(std::string archivo2);
         Equipo* SolicitarOCrearEquipo(void);
         Equipo* SolicitarEquipo(std::string fase);
         // tuple <string, char> ValidarEquipo(string linea);
         
         int MostrarCantidadEquipos(void);
+        int MostrarCantidadGrupos(void);
         Equipo* BuscarEquipo(std::string busqueda);
         
         // FUNCIONES DE MENU

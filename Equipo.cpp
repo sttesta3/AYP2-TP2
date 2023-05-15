@@ -199,18 +199,20 @@ bool Equipo::TieneFase(std::string fase){
 
 Partido* Equipo::BuscarPartido(std::string fase, Equipo* rival){
     int CANT_PARTIDOS = int(this->fases[this->BuscarFase(fase)]->partidos.size());
+    int POSICION_FASE;
     int i = 0;
 
     Partido* encontrado = nullptr;
     while (i < CANT_PARTIDOS && !encontrado){
+        POSICION_FASE = this->BuscarFase(fase);
         // Compara rival contra el equipo que no coincide con su nombre. Si encuentra coincidencia, es el partido buscado
-        if ( this->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1 ){
-            if (rival->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) == 1)
-                encontrado = this->fases[this->BuscarFase(fase)]->partidos[i];
+        if ( this->MostrarNombre().compare(this->fases[POSICION_FASE]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1 ){
+            if (rival->MostrarNombre().compare(this->fases[POSICION_FASE]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) == 1)
+                encontrado = this->fases[POSICION_FASE]->partidos[i];
         }
         else{
-            if (rival->MostrarNombre().compare(this->fases[this->BuscarFase(fase)]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1)
-                encontrado = this->fases[this->BuscarFase(fase)]->partidos[i];
+            if (rival->MostrarNombre().compare(this->fases[POSICION_FASE]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1)
+                encontrado = this->fases[POSICION_FASE]->partidos[i];
         }
 
         if (!encontrado)
@@ -220,12 +222,72 @@ Partido* Equipo::BuscarPartido(std::string fase, Equipo* rival){
     return encontrado;
 }
 
+Fase* Equipo::MostrarFase(int posicion){
+    if (posicion < 0)
+        return nullptr;
+    else if (posicion >= int(this->fases.size()))
+        return nullptr;
+    else
+        return this->fases[posicion];
+}
+
 void Equipo::NoEsOriginal(){
     this->original_de_archivo = false;
 }
 
 int Equipo::CalcularPuntajeGrupos(){
     return this->fases[this->BuscarFase("grupos")]->CalcularPuntaje(this);
+}
+
+void Equipo::MostrarPuntosDelGrupo(){
+    int POSICION_GRUPO = this->BuscarFase("grupos");
+    int CANT_EQUIPOS = int(this->fases[POSICION_GRUPO]->partidos.size());
+    std::cout << "CANT Equipos: " << CANT_EQUIPOS << std::endl;
+    // Agregamos los equipos ordenados por puntos a un vector
+    std::vector <Equipo*> Equipos_por_puntaje;
+    Equipos_por_puntaje.push_back(this);
+
+    Equipo* equipo_a_insertar;
+    int ii; bool iterar;
+
+    int puntos_equipo; int puntos_vector;
+    for (int i=0; i < CANT_EQUIPOS; i++){
+        ii = 0; iterar = true;
+        while (iterar && ii < int(Equipos_por_puntaje.size())){
+            // Compara rival contra el equipo que no coincide con su nombre. Si encuentra coincidencia, es el partido buscado
+            if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1 ){
+                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false);
+                puntos_equipo = equipo_a_insertar->CalcularPuntajeGrupos();
+                puntos_vector = Equipos_por_puntaje[ii]->CalcularPuntajeGrupos();
+                if (puntos_equipo > puntos_vector){
+                    Equipos_por_puntaje.insert(Equipos_por_puntaje.begin() + ii,equipo_a_insertar);
+                    iterar = false;
+                }
+                else
+                    ii += 1;
+
+            }
+            else if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) == 1 ){ 
+                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true);
+                puntos_equipo = equipo_a_insertar->CalcularPuntajeGrupos();
+                puntos_vector = Equipos_por_puntaje[ii]->CalcularPuntajeGrupos();
+                if (puntos_equipo > puntos_vector){
+                    Equipos_por_puntaje.insert(Equipos_por_puntaje.begin() + ii,equipo_a_insertar);
+                    iterar = false;
+                }
+                else
+                    ii += 1;
+            }
+
+        }
+
+        if (iterar)
+            Equipos_por_puntaje.push_back(equipo_a_insertar);
+    }
+
+    // Mostramos resultado
+    for (int i = 0; i < int(Equipos_por_puntaje.size()); i++)
+        std::cout << "Puntos: " << Equipos_por_puntaje[i]->CalcularPuntajeGrupos() << " Equipo: " <<  Equipos_por_puntaje[i]->MostrarNombre() << std::endl;
 }
 
 std::tuple <bool,bool,bool,bool,bool,bool> 

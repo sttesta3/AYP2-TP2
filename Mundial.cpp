@@ -38,18 +38,56 @@ int Mundial::CargarEquipos(std::string archivo1){
         }
         else
         {
-            // cout << "POR CARGAR EQUIPO" << endl; 
             this->equipos->AgregarElemento(nuevo_equipo); 
-            // cout << "EQUIPO CARGADO" << endl;
+            //std::cout << this->BuscarEquipo(nuevo_equipo.MostrarNombre()) << std::endl;
+            //this->AgregarGrupo(this->BuscarEquipo(nuevo_equipo.MostrarNombre()));
         }
     }
     entrada.close();
-    // DEBUG this->ListarEquipos();
+
+    Equipo* para_cargar_grupos;
+    this->equipos->IniciarIterador();
+    while (this->equipos->MostrarIterador() != nullptr){
+        para_cargar_grupos = this->equipos->MostrarIterador()->MostrarDireccion();
+        this->AgregarGrupo(para_cargar_grupos);
+        this->equipos->AvanzarIterador(1);
+    }
+    // DEBUG     this->ListarEquipos();
+
     return 0;
+}
+
+void Mundial::AgregarGrupo(Equipo* equipo){
+    int CANT_GRUPOS = this->MostrarCantidadGrupos();
+    int i = 0;
+    bool iterar = true;
+
+    char grupo_del_equipo = equipo->MostrarGrupo();
+
+    //DEBUG    std::cout << "POR ENTRAR AL WHILE" << std::endl;
+    while (i < CANT_GRUPOS && iterar){
+        if ((int)grupo_del_equipo < (int)this->grupos[i]->MostrarGrupo()){
+            iterar = false;
+            this->grupos.insert(this->grupos.begin() + i,equipo);
+        }
+        else if ((int)grupo_del_equipo == (int)this->grupos[i]->MostrarGrupo())
+            iterar = false;
+        else
+            i++;
+    }
+
+    if (iterar){
+        // debug std::cout << "PRIMER ELMENTO EN GRUPOS" << std::endl;
+        this->grupos.push_back(equipo);
+    }
 }
 
 int Mundial::MostrarCantidadEquipos(){
     return this->equipos->MostrarCantElementos();
+}
+
+int Mundial::MostrarCantidadGrupos(){
+    return int(this->grupos.size());
 }
 
 int Mundial::CargarPartidos(std::string archivo2){
@@ -128,7 +166,7 @@ int Mundial::CargarPartidos(std::string archivo2){
 
 // FUNCIONES DE MENU
 void Mundial::MostrarMenu(void){
-    // DEBUG std::cout << "DEBUGs" << std::endl;
+    // DEBUG    std::cout << "DEBUGs" << std::endl;
     //this->ListarCantFasesPorEquipo();
     std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
 
@@ -224,6 +262,7 @@ void Mundial::MenuActualizarPartido(void){
         std::cout << "1. Agregar partido" << std::endl;
         std::cout << "2. Actualizar partido" << std::endl;
         std::cout << "3. Eliminar partido" << std::endl;
+        std::cout << "4. Volver" << std::endl;
         
         char input_actualizar; std::cin >> input_actualizar;
         if (int(input_actualizar) < 48 || int(input_actualizar) > 57)
@@ -231,11 +270,13 @@ void Mundial::MenuActualizarPartido(void){
 
         switch ( int(input_actualizar) % 48 ){
             case 1:
-                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->AgregarPartido(); mostrar_menu_actualizar = false; break;
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->AgregarPartido(); mostrar_menu_actualizar = false; break;
             case 2:
-                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->ActualizarPartido(); mostrar_menu_actualizar = false; break;
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ActualizarPartido(); mostrar_menu_actualizar = false; break;
             case 3:
-                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->EliminarPartido(); mostrar_menu_actualizar = false; break;
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->EliminarPartido(); mostrar_menu_actualizar = false; break;
+            case 4:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; mostrar_menu_actualizar = false; break;
             default:
                 std::cout << "MENU Opcion invalida, favor reingresar" << std::endl; break;
         }
@@ -334,7 +375,13 @@ void Mundial::MostrarBuscarEquipo(std::string busqueda){
     }
 }
 void Mundial::MenuPuntos(void){   
+    int CANT_GRUPOS = this->MostrarCantidadGrupos();
     
+    std::cout << "PUNTOS POR GRUPO" << std::endl;
+    for (int i = 0; i < CANT_GRUPOS; i++){
+        std::cout << "GRUPO: " << char(toupper(this->grupos[i]->MostrarGrupo())) << std::endl;
+        this->grupos[i]->MostrarPuntosDelGrupo();
+    }
 }
 
 int Mundial::AgregarPartido(void){
@@ -422,8 +469,9 @@ Equipo* Mundial::SolicitarOCrearEquipo(){
                     }
                     auxiliar.AsignarGrupo(grupo); auxiliar.NoEsOriginal();
                     this->equipos->AgregarElemento(auxiliar);
-
+                    
                     resultado = this->BuscarEquipo(auxiliar.MostrarNombre());
+                    this->AgregarGrupo(resultado);
                 }
                 else
                     std::cout << "Opcion Invalida, favor reingresar" << std::endl;
@@ -598,7 +646,40 @@ bool Mundial::ValidarMundial(bool verbose){
     if (verbose)
         std::cout << "INCOHERENCIAS DE EQUIPOS" << std::endl;
     
-    // DEBUG        std::cout << "POR ENTRAR AL WHILE" << std::endl;
+    // CANT DE GRUPOS
+    if (this->MostrarCantidadGrupos() != 8){
+        if (verbose)
+            std::cout << "Hay " << this->MostrarCantidadGrupos() << " grupos. Deberian ser 8" << std::endl;
+        else
+            iterar = false;
+    }
+
+    // EQUIPOS POR GRUPO
+    if (iterar){
+        int CANT_GRUPOS = int(this->grupos.size());
+        int POSICION_GRUPOS;
+        int cant_partidos;
+
+        int i = 0;
+        while (iterar && i < CANT_GRUPOS){
+            POSICION_GRUPOS = this->grupos[i]->BuscarFase("grupos");
+            cant_partidos = int(this->grupos[i]->MostrarFase(POSICION_GRUPOS)->partidos.size());
+            if (cant_partidos == 0){
+                if (verbose)
+                    std::cout << "Hay un unico equipo en el grupo " <<  this->grupos[i]->MostrarGrupo() << std::endl;
+                else
+                    iterar = false;
+            }
+            else if (cant_partidos == 1){
+                if (verbose){
+                    std::cout << "Hay solo dos equipos en el grupo " <<  this->grupos[i]->MostrarGrupo() << std::endl;
+                    std::cout << "No es un error logico, pero los equipos pasan de fase indistintamente del resultado de su partido " << std::endl;
+                }
+            }
+
+            i += 1;
+        }
+    }
 
     int i = 0;
     while (i < CANTIDAD_DE_EQUIPOS && iterar){
