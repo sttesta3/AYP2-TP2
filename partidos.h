@@ -2,7 +2,7 @@
 #define PARTIDOS_H
 
 class Equipo;
-//#include "Equipo.h"
+// #include "Equipo.h"
 
 #include <tuple>
 #include <string>
@@ -17,11 +17,12 @@ class Partido
         void AsignarEquipo(Equipo* equipo, bool equipo1);
         void AsignarGoles(int goles, bool equipo1);
         void AsignarLinea(int linea);
+        void NoEsOriginal();
         virtual std::tuple<int,int> MostrarPuntos() = 0;
         // virtual int CalcularPuntaje(Equipo* equipo) = 0;
         virtual Equipo* MostrarGanador() = 0;
         virtual Equipo* MostrarPerdedor() = 0;
-
+        virtual void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2) = 0;
         virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
         virtual std::tuple<std::string,std::string> ValidarPartido(std::string linea) = 0;
 
@@ -59,7 +60,7 @@ class PartidoGrupo: public Partido{
         Equipo* MostrarEquipo(bool equipo1);
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
-        
+        void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
 };
 
 class PartidoEliminatoria: public Partido{
@@ -75,6 +76,8 @@ class PartidoEliminatoria: public Partido{
         Equipo* MostrarEquipo(bool equipo1);
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
+        void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
+
         
     private:
         int penales1;

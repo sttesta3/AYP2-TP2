@@ -48,6 +48,7 @@ class Equipo {
         int CalcularPuntajeGrupos();
 
         void NoEsOriginal(void);
+        int MostrarFaseFinal(void);
 };
 
 #endif // EQUIPO_H

@@ -140,6 +140,28 @@ int Equipo::BuscarFase(std::string fase){
         return i;
 }
 
+int Equipo::MostrarFaseFinal(){
+    std::tuple <bool,bool,bool,bool,bool,bool> fases_existentes = this->MostrarFasesExistentes();
+
+    int resultado = 0;
+    if (std::get<0>(fases_existentes)){
+        if (std::get<1>(fases_existentes))
+            resultado += 1;
+        if (std::get<2>(fases_existentes))
+            resultado += 1;
+        if (std::get<3>(fases_existentes))
+            resultado += 1;
+        if (std::get<4>(fases_existentes))
+            resultado += 1;        
+        if (std::get<5>(fases_existentes))
+            resultado += 2;   
+    }
+    
+    if (resultado < 0 || resultado > 5)
+        resultado = 0;
+
+    return resultado;
+}
 
 void Equipo::NoEsOriginal(){
     this->original_de_archivo = false;

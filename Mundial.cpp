@@ -318,19 +318,18 @@ void Mundial::MostrarBuscarEquipo(std::string busqueda){
         else if (equipo == this->tercero)
             std::cout << "TERCERO" << std::endl;
         else {
-            /*
-            switch (equipo->MostrarFaseFinal())
-            case -1:
-                std::cout << "FASE HASTA LA QUE LLEGO: GRUPOS" << std::endl; break;
-            case 0:
-                std::cout << "FASE HASTA LA QUE LLEGO: OCTAVOS" << std::endl; break;
-            case 1:
-                std::cout << "FASE HASTA LA QUE LLEGO: CUARTOS" << std::endl; break;
-            case 2:
-                std::cout << "FASE HASTA LA QUE LLEGO: SEMIFINAL" << std::endl; break;
-            case 3:
-                std::cout << "FASE HASTA LA QUE LLEGO: TERCER PUESTO (Cuarto)" << std::endl; break;
-            */
+            switch (equipo->MostrarFaseFinal()){
+                case 0:
+                    std::cout << "FASE HASTA LA QUE LLEGO: GRUPOS" << std::endl; break;
+                case 1:
+                    std::cout << "FASE HASTA LA QUE LLEGO: OCTAVOS" << std::endl; break;
+                case 2:
+                    std::cout << "FASE HASTA LA QUE LLEGO: CUARTOS" << std::endl; break;
+                case 3:
+                    std::cout << "FASE HASTA LA QUE LLEGO: SEMIFINAL" << std::endl; break;
+                case 4:
+                    std::cout << "FASE HASTA LA QUE LLEGO: TERCER PUESTO (Cuarto)" << std::endl; break;
+            }
         }
     }
 }
@@ -338,32 +337,48 @@ void Mundial::MenuPuntos(void){
     
 }
 
-void Mundial::AgregarPartido(void){
+int Mundial::AgregarPartido(void){
     std::string input;
     
     // SOLICITAR FASE
     std::string fase;
-    input = "Algo random para que itere"
-    bool fase_valida = false;
-    while (!divisor_de_fase(input))
+    input = "Algo random para que itere";
+    while (!divisor_de_fase(input)){
         std::cout << "Ingrese fase del partido a agregar: " << std::endl; std::cin >> input;
+    }
     fase = input;
 
     // SOLICITAR EQUIPOS
     Equipo *equipo1 = this->SolicitarEquipo();
+    if (!equipo1){
+        std::cerr << "No se encontro/Creo equipo 1" << std::endl
+        return 1;
+    }
     Equipo *equipo2 = this->SolicitarEquipo();
-
-    int goles1 = -5;
-    while (goles1 < 0)
-        std::cout << "Ingrese goles de " << equipo1->MostrarNombre() ": " << std::endl; std::cin >> goles1;
-    int goles2 = -5;
-    while (goles2 < 0)
-        std::cout << "Ingrese goles de " << equipo2->MostrarNombre() ": " std::endl; std::cin >> goles2;
+    if (!equipo1){
+        std::cerr << "No se encontro/Creo equipo 1" << std::endl
+        return 1;
+    }
 
     Partido* nuevo_partido;
-    if (fase.compare("grupos") == 1){
+    if (fase.compare("grupos") == 1)
+        nuevo_partido = new PartidoGrupo;
+    else
+        nuevo_partido = new PartidoEliminatoria;
 
+    if (!nuevo_partido){
+        std::cerr << "No se pudo crear partido" << std::endl;
+        return 1;
     }
+
+    nuevo_partido->SolicitarValores(equipo1,equipo2,equipo1->MostrarNombre(),equipo2->MostrarNombre());
+    nuevo_partido->NoEsOriginal();
+
+    // AGREGAR PARTIDO
+    this->partidos->AgregarElemento(nuevo_partido);
+    equipo1->AgregarPartido(nuevo_partido,fase); equipo2->AgregarPartido(nuevo_partido,fase);
+
+    return 0;
 }
 
 Equipo* Mundial::SolicitarEquipo(){
@@ -420,20 +435,22 @@ Equipo* Mundial::SolicitarEquipo(){
 bool Mundial::ValidarGrupo(char input){
     // SOLO SE PERMITIRAN GRUPOS EXISTENTES. LE ESTAMOS DANDO DEMASIADA FLEXIBILIDAD AL USUARIO Y NO SE LA MERECE
     bool iterar = true;
-    int CANT_EQUIPOS = this->MostrarCantidadEquipos();
-
+    
     this->equipos->IniciarIterador();
-    while (iterar && this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo() != nullptr){
+    while (iterar && this->equipos->MostrarIterador() != nullptr){
         if ( this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo() == input )
             iterar = false;
+        else
+            this->equipos->AvanzarIterador(1);
     }
 
     return !(iterar);
 }
-
+/*
 int Mundial::CargarEquipo(Equipo equipo){
 
 }
+*/
 
 void Mundial::ActualizarPartido(void){
 
@@ -539,7 +556,7 @@ bool Mundial::ValidarMundial(bool verbose){
 
 bool Mundial::Guardado(){
     // Lee Equipos Buscando bool not original_de_archivo. Si no es original, entonces lo guarda en el archivo
-    // Lee Partidos Busando bool not original_de_archivo o bool editado. 
+    // Lee Partidos Buscando bool not original_de_archivo o bool editado. 
     // Si es partido nuevo lo agrega en fase correspondiente, si es una edicion va a linea, borra y agrega linea del partido
 
     return true;

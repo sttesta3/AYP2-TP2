@@ -30,6 +30,12 @@ void Partido::AsignarLinea(int linea){
     this->linea = linea;
 }
 
+void Partido::NoEsOriginal(){
+    this->original_de_archivo = false;
+    this->editado = false;
+    this->linea = -1;
+}
+
 void PartidoGrupo::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2){
     this->AsignarEquipo(equipo1,true);
     this->AsignarEquipo(equipo2,false);
@@ -225,4 +231,61 @@ Equipo* PartidoEliminatoria::MostrarEquipo(bool equipo1){
         return this->equipo1;
     else
         return this->equipo2;
+}
+
+void PartidoGrupo::SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2){
+
+    int goles1 = -5;
+    while (goles1 < 0){
+        std::cout << "Ingrese goles de " << nombre1 << ": " << std::endl; std::cin >> goles1;
+    }
+    int goles2 = -5;
+    while (goles2 < 0){
+        std::cout << "Ingrese goles de " << nombre2 << ": " << std::endl; std::cin >> goles2;
+    }
+
+    this->equipo1 = equipo1;
+    this->equipo2 = equipo2;
+    this->goles1 = goles1;
+    this->goles2 = goles2;
+}
+
+void PartidoEliminatoria::SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2){
+    int goles1 = -5;
+    while (goles1 < 0){
+        std::cout << "Ingrese goles de " << nombre1 << ": " << std::endl; std::cin >> goles1;
+    }
+    int goles2 = -5;
+    while (goles2 < 0){
+        std::cout << "Ingrese goles de " << nombre2 << ": " << std::endl; std::cin >> goles2;
+    }
+
+    int penales1 = -5;
+    int penales2 = -5;
+    if (goles1 != goles2){
+        penales1 = -1;
+        penales2 = -1;
+    }
+    else {
+        while (penales1 == penales2){
+            while (penales1 < 0){
+                std::cout << "Ingrese penales de " << nombre1 << ": " << std::endl; std::cin >> penales1;
+            }
+            while (penales2 < 0){
+                std::cout << "Ingrese penales de " << nombre2 << ": " << std::endl; std::cin >> penales2;
+            }
+
+            if (penales1 == penales2){
+                std::cout << "Los penales ingresados son iguales, favor reingresar" << std::endl;
+            }
+        }
+    }
+
+    this->equipo1 = equipo1;
+    this->equipo2 = equipo2;
+    this->goles1 = goles1;
+    this->goles2 = goles2;
+    this->penales1 = penales1;
+    this->penales2 = penales2;
+
 }
