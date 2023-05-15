@@ -1,10 +1,14 @@
 #ifndef PARTIDOS_H
 #define PARTIDOS_H
 
-#include "Equipo.h"
+class Equipo;
+//#include "Equipo.h"
 
 #include <tuple>
 #include <string>
+#include <iostream>
+
+#include "utils.h"
 
 class Partido 
 {
@@ -12,7 +16,7 @@ class Partido
         Equipo* MostrarEquipos(bool equipo1);
         void AsignarEquipo(Equipo* equipo, bool equipo1);
         void AsignarGoles(int goles, bool equipo1);
-
+        void AsignarLinea(int linea);
         virtual std::tuple<int,int> MostrarPuntos() = 0;
         // virtual int CalcularPuntaje(Equipo* equipo) = 0;
         virtual Equipo* MostrarGanador() = 0;
@@ -38,6 +42,8 @@ class Partido
         int goles2;
 
         bool original_de_archivo;
+        bool editado;
+        int linea;
 };
 
 class PartidoGrupo: public Partido{

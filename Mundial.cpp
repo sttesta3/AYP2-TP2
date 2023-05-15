@@ -15,6 +15,7 @@ Mundial::Mundial()
 Mundial::~Mundial()
 {
     // DESTRUCTOR
+    // COMO TODA LA MEMORIA DINAMICA DEL PROGRAMA DEPENDE DE ESTAS DOS LISTAS, ES SUFICIENTE BORRARLAS PARA QUE SE BORRE TUTI
     delete this->equipos;
     delete this->partidos;
 }
@@ -43,7 +44,7 @@ int Mundial::CargarEquipos(std::string archivo1){
         }
     }
     entrada.close();
-    this->ListarEquipos();
+    // DEBUG this->ListarEquipos();
     return 0;
 }
 
@@ -60,7 +61,7 @@ int Mundial::CargarPartidos(std::string archivo2){
 
     std::string fase;
     std::string linea;
-    
+    int num_linea = 0;
     while (getline(entrada, linea)){
         linea = to_lower(linea);
         // std::cout << "LINEA PARTIDO: " << linea << std::endl;
@@ -76,7 +77,6 @@ int Mundial::CargarPartidos(std::string archivo2){
                 nuevo_partido = new PartidoGrupo;
             else
                 nuevo_partido = new PartidoEliminatoria;
-
 
             std::tuple <std::string,std::string> encontrado;
             Equipo *equipo1,*equipo2;
@@ -101,10 +101,10 @@ int Mundial::CargarPartidos(std::string archivo2){
             }
 
             // ASIGNAR EQUIPOS AL NUEVO PARTIDO -> AGREGAR PARTIDO A LISTA -> AGREGAR PARTIDO A FASE
-            nuevo_partido->AsignarEquipo(equipo1,true); nuevo_partido->AsignarEquipo(equipo2,false); 
+            nuevo_partido->AsignarEquipo(equipo1,true); nuevo_partido->AsignarEquipo(equipo2,false); nuevo_partido->AsignarLinea(num_linea);
             this->partidos->AgregarElemento(nuevo_partido);
             equipo1->AgregarPartido(nuevo_partido,fase); equipo2->AgregarPartido(nuevo_partido,fase);
-
+            
             // PODIO
             if (fase.compare("final") == 1){
                 // DEBUG 
@@ -118,6 +118,8 @@ int Mundial::CargarPartidos(std::string archivo2){
             else if (fase.compare("tercer puesto") == 1)
                 this->tercero = nuevo_partido->MostrarGanador();
         }
+
+        num_linea += 1;
     }
 
     entrada.close();
@@ -126,7 +128,7 @@ int Mundial::CargarPartidos(std::string archivo2){
 
 // FUNCIONES DE MENU
 void Mundial::MostrarMenu(void){
-    std::cout << "DEBUGs" << std::endl;
+    // DEBUG std::cout << "DEBUGs" << std::endl;
     //this->ListarCantFasesPorEquipo();
     std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
 
@@ -142,16 +144,14 @@ void Mundial::MostrarMenu(void){
         std::cout << "2. Mostrar los equipos en primer segundo y tercer lugar" << std::endl;
         std::cout << "3. Buscar equipo por nombre" << std::endl;
         std::cout << "4. Mostrar por fase los paises ordenados por puntaje" << std::endl;
-        std::cout << "5. Agregar partido" << std::endl;
-        std::cout << "6. Actualizar partido" << std::endl;
-        std::cout << "7. Borrar partido" << std::endl;
-        std::cout << "8. Salir" << std::endl;
+        std::cout << "5. Actualizar partidos" << std::endl;
+        std::cout << "6. Salir" << std::endl;
 
         bool mundial_valido = this->ValidarMundial(false);
         if (!mundial_valido){
             std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
             std::cout << "INCOHERENCIA(s) ENCONTRADA(s) EN EL MUNDIAL INGRESADO" << std::endl;
-            std::cout << "9. Mostrar detalles de incoherencias en el mundial" << std::endl;
+            std::cout << "7. Mostrar detalles de incoherencias en el mundial" << std::endl;
             std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
         }
 
@@ -160,64 +160,88 @@ void Mundial::MostrarMenu(void){
             input = '/';           // UN NUMERO RANDOM INVALIDO (ascii 47)
 
         switch ( int(input) % 48 ){
-        case 0: // DEBUG
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ListarPartidos(); break;
-        case 1:
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ListarEquipos(); break;
-        case 2:
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->Podio();break;
-        case 3:
-            { std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; std::cout << "Ingrese nombre del equipo:" << std::endl; std::string busqueda; std::cin >> busqueda; this->MostrarBuscarEquipo(busqueda); break; }
-        case 4: 
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->MenuPuntos(); break;
-        case 5:
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->AgregarPartido(); break;
-        case 6:
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ActualizarPartido(); break;
-        case 7:
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->BorrarPartido(); break;
-        case 8:
-        {
-            std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
-            bool mostrar_menu_guardado = true;
-            while (mostrar_menu_guardado){
-                if (!mundial_valido)
-                    std::cout << "RECORDATORIO: Mundial Invalido" << std::endl;
-                std::cout << "¿DESEA GUARDAR LAS MODIFICACIONES REALIZADAS?" << std::endl;
-                std::cout << "0. No" << std::endl;
-                std::cout << "1. Si" << std::endl;
+            case 0: // DEBUG
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ListarPartidos(); break;
+            case 1:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->ListarEquipos(); break;
+            case 2:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->Podio();break;
+            case 3:
+                { std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; std::cout << "Ingrese nombre del equipo:" << std::endl; std::string busqueda; std::cin >> busqueda; this->MostrarBuscarEquipo(busqueda); break; }
+            case 4: 
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->MenuPuntos(); break;
+            case 5:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl; this->MenuActualizarPartido(); break;
+            case 6:
+            {
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
+                bool mostrar_menu_guardado = true;
+                while (mostrar_menu_guardado){
+                    if (!mundial_valido)
+                        std::cout << "RECORDATORIO: Mundial Invalido" << std::endl;
+                    std::cout << "¿DESEA GUARDAR LAS MODIFICACIONES REALIZADAS?" << std::endl;
+                    std::cout << "0. No" << std::endl;
+                    std::cout << "1. Si" << std::endl;
 
-                char input_guardado; std::cin >> input_guardado;
-                if (int(input_guardado) != 48 || int(input_guardado) != 49)
-                    input = '/';           // UN NUMERO RANDOM INVALIDO
+                    char input_guardado; std::cin >> input_guardado;
+                    if (int(input_guardado) != 48 && int(input_guardado) != 49)
+                        input_guardado = '/';           // UN NUMERO RANDOM INVALIDO
 
-                switch ( int(input_guardado) % 48 ){
-                    case 0: 
-                        mostrar_menu_guardado = false; break;
-                    case 1:
-                    {
-                        mostrar_menu_guardado = false;
-                        if (!this->Guardado())
-                            std::cerr << "ERROR DE GUARDADO" << std::endl;
-                    }; break;
-                    default:
-                        std::cout << "GUARDADO Opcion invalida, favor reingresar" << std::endl; break;
+                    switch ( int(input_guardado) % 48 ){
+                        case 0: 
+                            mostrar_menu_guardado = false; break;
+                        case 1:
+                        {
+                            
+                            if (!this->Guardado())
+                                std::cerr << "ERROR DE GUARDADO" << std::endl;
+                        }; break;
+                        default:
+                            std::cout << "GUARDADO Opcion invalida, favor reingresar" << std::endl; break;
+                    }
+
                 }
-
-                mostrar_menu = false; 
+                mostrar_menu = false;
             }; break;
+            case 7:
+            {
+                if (!mundial_valido)
+                    this->ValidarMundial(true);
+                else
+                    std::cout << "VALIDAR Opcion invalida, favor reingresar" << std::endl;
+                break;
+            }
+            default:
+                std::cout << "MENU Opcion invalida, favor reingresar" << std::endl; break;
         }
-        case 9:
-        {
-            if (!mundial_valido)
-                this->ValidarMundial(true);
-            else
-                std::cout << "VALIDAR Opcion invalida, favor reingresar" << std::endl;
-            break;
+    }
+}
+
+void Mundial::MenuActualizarPartido(void){
+    bool mostrar_menu_actualizar = true;
+
+    while(mostrar_menu_actualizar){
+        std::cout << "1. Agregar partido" << std::endl;
+        std::cout << "2. Actualizar partido" << std::endl;
+        std::cout << "3. Eliminar partido" << std::endl;
+        
+        char input_actualizar; std::cin >> input_actualizar;
+        if (int(input_actualizar) < 48 || int(input_actualizar) > 57)
+            input_actualizar = '/';           // UN NUMERO RANDOM INVALIDO (ascii 47)
+
+        switch ( int(input_actualizar) % 48 ){
+            case 1:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->AgregarPartido(); mostrar_menu_actualizar = false; break;
+            case 2:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->ActualizarPartido(); mostrar_menu_actualizar = false; break;
+            case 3:
+                std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;this->EliminarPartido(); mostrar_menu_actualizar = false; break;
+            default:
+                std::cout << "MENU Opcion invalida, favor reingresar" << std::endl; break;
         }
-        default:
-            std::cout << "MENU Opcion invalida, favor reingresar" << std::endl; break;
-        }
+
+        std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
+
     }
 }
 
@@ -315,6 +339,99 @@ void Mundial::MenuPuntos(void){
 }
 
 void Mundial::AgregarPartido(void){
+    std::string input;
+    
+    // SOLICITAR FASE
+    std::string fase;
+    input = "Algo random para que itere"
+    bool fase_valida = false;
+    while (!divisor_de_fase(input))
+        std::cout << "Ingrese fase del partido a agregar: " << std::endl; std::cin >> input;
+    fase = input;
+
+    // SOLICITAR EQUIPOS
+    Equipo *equipo1 = this->SolicitarEquipo();
+    Equipo *equipo2 = this->SolicitarEquipo();
+
+    int goles1 = -5;
+    while (goles1 < 0)
+        std::cout << "Ingrese goles de " << equipo1->MostrarNombre() ": " << std::endl; std::cin >> goles1;
+    int goles2 = -5;
+    while (goles2 < 0)
+        std::cout << "Ingrese goles de " << equipo2->MostrarNombre() ": " std::endl; std::cin >> goles2;
+
+    Partido* nuevo_partido;
+    if (fase.compare("grupos") == 1){
+
+    }
+}
+
+Equipo* Mundial::SolicitarEquipo(){
+    bool equipo_encontrado = false;
+    std::string input;
+
+    Equipo auxiliar;
+    Equipo* resultado;
+    while (!equipo_encontrado){
+        
+        bool equipo_valido = false;
+        while (!equipo_valido){
+            std::cout << "Ingrese nombre del primer equipo: " << std::endl; std::cin >> input;
+            equipo_valido = auxiliar.ValidarEquipo(input);
+        } 
+
+        resultado = this->BuscarEquipo(input);
+        if (!resultado){
+            std::cout << "El equipo " << input << " no existe" << std::endl;
+            std::cout << "¿Desea crear un equipo nuevo para esto?" << std::endl;
+            std::cout << "DISCLAIMER: Crear un nuevo equipo probablemente genere muchas inconsistencias" << std::endl;
+
+            bool crear_nuevo_equipo = false;
+            while (!crear_nuevo_equipo){
+                std::cout << "0. No" << std::endl;
+                std::cout << "1. Si" << std::endl;
+                std::cin >> input;
+
+                if (input.compare("0") == 1)
+                    crear_nuevo_equipo = true;
+                else if (input.compare("1") == 1){
+                    crear_nuevo_equipo = true; 
+
+                    char grupo;
+                    bool grupo_valido = false;
+                    while (!grupo_valido){
+                        std::cout << "Ingrese grupo del equipo: " << std::endl; std::cin >> grupo;
+                        grupo_valido = this->ValidarGrupo(grupo);
+                    }
+                    auxiliar.AsignarGrupo(grupo); auxiliar.NoEsOriginal();
+                    this->equipos->AgregarElemento(auxiliar);
+
+                    resultado = this->BuscarEquipo(auxiliar.MostrarNombre());
+                }
+                else
+                    std::cout << "Opcion Invalida, favor reingresar" << std::endl;
+            }
+        }
+    }
+    
+    return resultado;
+}
+
+bool Mundial::ValidarGrupo(char input){
+    // SOLO SE PERMITIRAN GRUPOS EXISTENTES. LE ESTAMOS DANDO DEMASIADA FLEXIBILIDAD AL USUARIO Y NO SE LA MERECE
+    bool iterar = true;
+    int CANT_EQUIPOS = this->MostrarCantidadEquipos();
+
+    this->equipos->IniciarIterador();
+    while (iterar && this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo() != nullptr){
+        if ( this->equipos->MostrarIterador()->MostrarContenido().MostrarGrupo() == input )
+            iterar = false;
+    }
+
+    return !(iterar);
+}
+
+int Mundial::CargarEquipo(Equipo equipo){
 
 }
 
@@ -322,7 +439,7 @@ void Mundial::ActualizarPartido(void){
 
 }
 
-void Mundial::BorrarPartido(void){
+void Mundial::EliminarPartido(void){
 
 }
 
@@ -339,12 +456,13 @@ bool Mundial::ValidarMundial(bool verbose){
     if (verbose)
         std::cout << "INCOHERENCIAS DE EQUIPOS" << std::endl;
     
-    // DEBUG    std::cout << "POR ENTRAR AL WHILE" << std::endl;
+    // DEBUG        std::cout << "POR ENTRAR AL WHILE" << std::endl;
 
     int i = 0;
     while (i < CANTIDAD_DE_EQUIPOS && iterar){
+        // DEBUG        std::cout << "DENTRO DEL WHILE" << std::endl;
         equipo_valido = this->equipos->MostrarIterador()->MostrarContenido().ValidarMundialEquipo(verbose);
-
+        // DEBUG        std::cout << "VALIDE EQUIPO" << std::endl;
         i += 1;
         if (!verbose && !equipo_valido)
             iterar = false;                 // DEJA DE ITERAR SI NO ES VERBOSE
@@ -352,7 +470,7 @@ bool Mundial::ValidarMundial(bool verbose){
             this->equipos->AvanzarIterador(1);
     }
 
-    // DEBUG    std::cout << "SALI DEL WHILE" << std::endl;
+    // DEBUG       std::cout << "SALI DEL WHILE" << std::endl;
 
     // VALIDACION A NIVEL MUNDIAL
     if (iterar){
@@ -416,12 +534,13 @@ bool Mundial::ValidarMundial(bool verbose){
         std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
     }
 
-    
     return iterar;
 }
 
 bool Mundial::Guardado(){
-    // LEE LISTAS BUSCANDO bool original_de_archivo. Si no es original, entonces lo guarda en el archivo
+    // Lee Equipos Buscando bool not original_de_archivo. Si no es original, entonces lo guarda en el archivo
+    // Lee Partidos Busando bool not original_de_archivo o bool editado. 
+    // Si es partido nuevo lo agrega en fase correspondiente, si es una edicion va a linea, borra y agrega linea del partido
 
     return true;
 }

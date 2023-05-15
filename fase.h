@@ -3,8 +3,17 @@
 
 #include <vector>
 #include <string>
-//#include "partidos.h"
-class Partido;
+#include <tuple>
+#include <iostream>
+
+#include "Equipo.h"
+//class Equipo;
+
+#include "partidos.h"
+//class Partido;
+//class PartidoGrupo;
+//class PartidoEliminatoria;
+
 
 class Fase
 {
@@ -17,16 +26,17 @@ class Fase
         void AsignarFase(std::string fase);
 
         std::string MostrarFase();
-        //virtual int CalcularPuntaje(Equipo* equipo) = 0;
-        //virtual bool PasoFase(Equipo* equipo) = 0;
+        virtual int CalcularPuntaje(Equipo* equipo) = 0;
+        virtual bool PasoFase(Equipo* equipo) = 0;
+
+        std::vector <Partido*> partidos;
 
     protected:
-        std::vector <Partido*> partidos;
         std::string fase;
         
 };
 
-/*
+
 class FaseGrupo : public Fase{
     public:
         int CalcularPuntaje(Equipo* equipo);
@@ -37,7 +47,8 @@ class FaseEliminatoria: public Fase{
     public:
         int CalcularPuntaje(Equipo* equipo);
         bool PasoFase(Equipo* equipo);
+        //PartidoEliminatoria* MostrarPartido();
 };
-*/
+
 
 #endif // FASE_H

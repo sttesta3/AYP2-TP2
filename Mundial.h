@@ -30,7 +30,7 @@ class Mundial {
         // FUNCIONES DE MEMORIA
         int CargarEquipos(std::string archivo1);
         int CargarPartidos(std::string archivo2);
-        // 
+        void SolicitarEquipo(void);
         // tuple <string, char> ValidarEquipo(string linea);
         
         int MostrarCantidadEquipos(void);
@@ -45,11 +45,13 @@ class Mundial {
         void MostrarBuscarEquipo(std::string busqueda);
         void MenuPuntos(void);
 
+        void MenuActualizarPartido(void);
         void AgregarPartido(void);
         void ActualizarPartido(void);
-        void BorrarPartido(void);
+        void EliminarPartido(void);
 
         bool ValidarMundial(bool verbose);
+        bool ValidarGrupo(char input);
         bool Guardado();
 
         // FUNCIONES DEBUG

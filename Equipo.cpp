@@ -64,17 +64,16 @@ void Equipo::AgregarPartido(Partido* partido, std::string fase){
     if (fase.compare("grupos") == 1){
         // SI ESTA VACIO, CREAR FASE
         if (this->fases.size() == 0){
-            Fase* nuevo_grupos = new Fase;
+            Fase* nuevo_grupos = new FaseGrupo;
             this->fases.push_back(nuevo_grupos);
-            nuevo_grupos->AsignarFase(fase);
+            nuevo_grupos->AsignarFase("grupos");
         }
         this->fases[0]->AgregarPartido(partido);
     }
     else {
-        // DEBUG
-        std::cout << "Equipo: " << this->nombre << " NUEVA ELIM: " << fase << std::endl;
+        // DEBUG std::cout << "Equipo: " << this->nombre << " NUEVA ELIM: " << fase << std::endl;
 
-        Fase* nueva_eliminatoria = new Fase;
+        Fase* nueva_eliminatoria = new FaseEliminatoria;
         nueva_eliminatoria->AgregarPartido(partido);
         nueva_eliminatoria->AsignarFase(fase);
 
@@ -89,8 +88,17 @@ void Equipo::AgregarPartido(Partido* partido, std::string fase){
 bool Equipo::ValidarMundialEquipo(bool verbose){
     //std::tuple <bool,bool,bool,bool,bool,bool> fases_existentes = this->MostrarFasesExistentes();
     
-    bool valido = true;
+    //DEBUG 
     /*
+    std::cout << "IN VALIDARMUNDIALEQUIPO" << std::endl;
+    std::cout << "SECOND " << (this->BuscarFase("octavos") == -1) << std::endl;
+    std::cout << "POSICION: " << this->BuscarFase("grupos") << std::endl;
+    std::cout << "FIRST " << this->fases[this->BuscarFase("grupos")]->PasoFase(this) << std::endl;
+    */
+    // LLEGUE AL SEGUNDO, EL PROBLEMA ESTA EN LA PRIMER PARTE
+
+
+    bool valido = true;
     if (this->fases[this->BuscarFase("grupos")]->PasoFase(this) && this->BuscarFase("octavos") == -1 ){
         if (verbose)
             std::cout << to_upper(this->nombre) << " PASO LA FASE DE GRUPOS PERO NO ESTA EN OCTAVOS" << std::endl;
@@ -116,7 +124,6 @@ bool Equipo::ValidarMundialEquipo(bool verbose){
             std::cout << to_upper(this->nombre) << " PERDIO SEMIFINAL PERO NO ESTA EN TERCER PUESTO" << std::endl;
         valido = false;
     }
-    */
     
     return valido;
 }
@@ -128,9 +135,18 @@ int Equipo::BuscarFase(std::string fase){
         i++;
     
     if (i == CANT_FASES)
-        return -1;
+        return 0;
     else
         return i;
+}
+
+
+void Equipo::NoEsOriginal(){
+    this->original_de_archivo = false;
+}
+
+int Equipo::CalcularPuntajeGrupos(){
+    return this->fases[this->BuscarFase("grupos")]->CalcularPuntaje(this);
 }
 
 std::tuple <bool,bool,bool,bool,bool,bool> 

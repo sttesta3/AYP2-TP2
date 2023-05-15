@@ -26,6 +26,10 @@ void Partido::AsignarGoles(int goles, bool equipo1){
         this->goles2 = goles;
 }
 
+void Partido::AsignarLinea(int linea){
+    this->linea = linea;
+}
+
 void PartidoGrupo::AsignarValores(Equipo* equipo1,Equipo* equipo2,int goles1,int goles2){
     this->AsignarEquipo(equipo1,true);
     this->AsignarEquipo(equipo2,false);
@@ -95,6 +99,7 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
         std::get<0>(resultado) = argv[0]; std::get<1>(resultado) = argv[2];
         this->AsignarGoles(std::stoi(argv[1]),true);  this->AsignarGoles(std::stoi(argv[3]),false);
         this->original_de_archivo = true;
+        this->editado = false;
     }
     else{
         std::get<0>(resultado) = nullptr; std::get<1>(resultado) = nullptr; 

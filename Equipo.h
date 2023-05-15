@@ -1,11 +1,16 @@
 #ifndef EQUIPO_H
 #define EQUIPO_H
 
+class Fase;
 #include "fase.h"
-//class Fase;
+//class FaseGrupo;
+//class FaseEliminatoria;
 
-//#include "partidos.h"
-class Partido;
+#include "partidos.h"
+
+//class Partido;
+//class PartidoGrupo;
+//class PartidoEliminatoria;
 
 // EDIT POR LINK
 #include <cstring>
@@ -40,6 +45,9 @@ class Equipo {
         bool ValidarMundialEquipo(bool verbose);
         std::tuple <bool,bool,bool,bool,bool,bool> MostrarFasesExistentes();
         int BuscarFase(std::string fase);
+        int CalcularPuntajeGrupos();
+
+        void NoEsOriginal(void);
 };
 
 #endif // EQUIPO_H
