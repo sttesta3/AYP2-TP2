@@ -20,21 +20,35 @@ int fase_a_numero(std::string fase){
 }
 
 bool divisor_de_fase(std::string input){
-    return ( input.compare("grupos") == 1 || input.compare("octavos") == 1 || input.compare("semifinales") == 1 || input.compare("cuartos") == 1 || input.compare("final") == 1 || input.compare("tercer puesto") == 1 );
+    bool resultado = false;
+    std::string fases[6] = {"grupos","octavos","cuartos","semifinales","final","tercer puesto"};
+    
+    // DEBUG std::cout << "DENTRO DIVISOR FASE, input " << input << " Largo: " <<  int(input.size()) << std::endl;
+    
+
+    int i = 0;
+    while (!resultado && i < 6){
+        // DEBUG std::cout << "DENTRO WHILE" << std::endl;
+        resultado = (cmp_string(input,fases[i]));
+        // DEBUG std::cout << "POST COMPARAR" << std::endl;
+        i += 1;
+    }
+    
+    return resultado;
 }
 
 // FUNCIONES DE STRING
 
 int len_string(std::string a){
     int i = 0;
-    while (a[i] != '\0')
+    while (a[i] != '\0' && a[i] != '\n' )
         i += 1;
     return i;
 }
 
 std::string split_string(std::string a){
     std::string output;
-    int largo = len_string(a);
+    int largo = int(a.size());
 
     for (int i = 0; i < largo - 2; i++)
         output += a[i];
@@ -44,17 +58,21 @@ std::string split_string(std::string a){
 }
 
 std::string to_lower(std::string a){
-    int largo = len_string(a);
+    int largo = int(a.size());
 
-    for (int i=0; i < largo;i++)
-        a[i] = char(tolower(a[i]));
+    for (int i=0; i < largo;i++){
+        if ((int)a[i] != 13)
+            a[i] = char(tolower(a[i]));
+        else
+            a.erase(a.begin() + i);
+    }
 
     return a;
 }
 
 std::string to_upper(std::string a){
     std::string output = "";
-    int largo = len_string(a);
+    int largo = int(a.size());
 
     if (largo > 0){
         output += char(toupper(a[0]));
@@ -77,7 +95,7 @@ std::string to_upper(std::string a){
 
 int string_a_int(std::string a){
     int resultado = 0;
-    int largo = len_string(a);
+    int largo = int(a.size());
     if (cmp_string(a, "-1") == false){
         for (int i=0; i < largo; i++){
             if ((int)a[i] >= 48 && (int)a[i] <= 57)
@@ -102,8 +120,8 @@ bool is_alfa(char a){
 bool cmp_string(std::string a, std::string b){
     // Devuelve True si son iguales, falso si no
     bool resultado = false;
-    int largo_a = len_string(a);
-    int largo_b = len_string(b);
+    int largo_a = int(a.size());
+    int largo_b = int(b.size());
 
     if (largo_a == largo_b){
         int i = 0;
@@ -119,18 +137,17 @@ bool cmp_string(std::string a, std::string b){
 int comparar_alfabeticamente(std::string a, std::string b){
     // int resultado = 0;
 
-    int largo_a = len_string(a);
-    int largo_b = len_string(b);
+    int largo_a = int(a.size());
+    int largo_b = int(b.size());
+
+    // DEBUG std::cout << "string a: " << a << " largo: " << largo_a << std::endl;
+    // DEBUG std::cout << "string b: " << b  << " largo: " << largo_b << std::endl;
 
     int i = 0;
     while (int(a[i]) == int(b[i]) && i < largo_a && i < largo_b)
         i++;
     
-    if (a[i] == '\0' && b[i] != '\0')       // TERMINO UNA DE LAS DOS
-        return -1;
-    else if (a[i] != '\0' && b[i] == '\0')
-        return 1;
-    else if (int(a[i]) > int(b[i]))         // ANALISIS SINTAXIS
+    if (int(a[i]) > int(b[i]))         // ANALISIS SINTAXIS
         return 1;
     else if (int(a[i]) < int(b[i]))
         return -1;
@@ -138,6 +155,11 @@ int comparar_alfabeticamente(std::string a, std::string b){
         return 0;
 }
 
+void DictarLinea(std::string linea){
+
+    for (int i=0; i < int(linea.size()); i++)
+        std::cout << "Letra: " << linea[i] << " Ascii: " << (int)linea[i] << std::endl;
+}
 // MANEJO DE MEMORIA
 /*
 int iniciar_equipo_vacio(Equipo* equipo){
@@ -247,7 +269,7 @@ int cargar_equipo_en_memoria(string linea, Mundial* mundial){
 
 
     Equipo* nuevo = new Equipo;
-    nuevo::Equipo(split_string(linea),linea[len_string(linea)-1])
+    nuevo::Equipo(split_string(linea),linea[int(linea.size())-1])
     mundial->equipos::AgregarElemento(&nuevo);
 
     return 0;
@@ -465,7 +487,7 @@ Equipo* validar_equipo(string linea){
     // Si el nombre es alfabetico, y termina en ' X', ser� v�lido. Ej equipo valido: Paises_Bajos
     // Nota: Esto no aplica para todos los deportes (por ej, en e-sports es usual que sean alfanumericos)
     bool equipo_valido = true;
-    int largo = len_string(linea);
+    int largo = int(linea.size());
 
     if (isalpha(linea[largo - 1]) && (int)linea[largo - 2] == 32){
         int i = 0;
@@ -507,7 +529,7 @@ Partido* validar_partido(Mundial* mundial, string linea){
     int argc = 0;
 
     // SEPARACION EN ARGUMENTOS
-    int largo = len_string(linea);
+    int largo = int(linea.size());
     for (int i = 0; i < largo && partido_valido == true; i++){
         if ((int)linea[i] != 44)
             argv[argc] += linea[i];

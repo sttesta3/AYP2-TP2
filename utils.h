@@ -17,6 +17,8 @@ int comparar_alfabeticamente(std::string a, std::string b);
 bool is_alfa(char a);
 int string_a_int(std::string a);
 bool cmp_string(std::string a, std::string b);
+void DictarLinea(std::string linea);
+
 
 // MANEJO DE MEMORIA
 /*
@@ -102,7 +104,6 @@ bool validar_equipo(string linea);
 bool validar_partido(string linea);
 
 // FUNCIONES DE STRING
-int len_string(string a);
 string to_lower(string a);
 string to_upper(string a);
 string split_string(string a);

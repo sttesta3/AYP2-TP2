@@ -25,7 +25,12 @@ void Partido::AsignarGoles(int goles, bool equipo1){
     else
         this->goles2 = goles;
 }
-
+int Partido::MostrarGoles(bool equipo1){
+    if (equipo1)
+        return this->goles1;
+    else
+        return this->goles2;
+}
 void Partido::AsignarLinea(int linea){
     // Con esta informacion es suficiente para realizar el guardado en el archivo de texto.
     // Se iteran los partidos y se compara contra la info en la linea mencionada.
@@ -68,6 +73,7 @@ Equipo* Partido::MostrarEquipos(bool equipo1){
 }
 
 std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string linea){
+    //DEBGU std::cout << "SOY GRUPO, linea: " << linea << std::endl;
     bool partido_valido = true;
     std::tuple <std::string,std::string> resultado;
 
@@ -75,7 +81,7 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
     std::string argv[4];
     int argc = 0;
     
-    int largo = len_string(linea);
+    int largo = int(linea.size());
     for (int i = 0; i < largo && partido_valido; i++){
         if ((int)linea[i] != 44)
             argv[argc] += linea[i];
@@ -88,17 +94,26 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
         }
     }
 
-    if (partido_valido == 0 && argc != 3){
+    if (partido_valido && argc != 3){
         std::cerr << "Pocos argumentos en partidos. Linea: " << linea << std::endl;
+        
+        
         partido_valido = false;
     }
 
-    /* DEBUG
-    for (int i=0; i < 4;i++)
-        std::cout << "I:" << i << " " << argv[i] << std::endl;
+    // DEBUG
+    /*
+    for (int i=0; i < 4; i++){
+        if (i%2 == 0)
+            std::cout << "i: " << i << " argv: " << argv[i] << std::endl;
+        else
+            std::cout << "i: " << i << " argv: " << argv[i] << " stoi " << std::stoi(argv[i]) << std::endl;
+
+    }
     */
-        
+    // DEBUG std::cout << "TEST de -1: " << std::stoi("-1") + 1<< std::endl;
     // VALIDAR GOLES
+    
     if (std::stoi(argv[1]) < 0 || std::stoi(argv[3]) < 0){
         std::cerr << "CANTIDAD DE GOLES INCORRECTA. Linea: " << linea << std::endl;
         partido_valido = false;
@@ -120,13 +135,14 @@ std::tuple <std::string,std::string> PartidoGrupo::ValidarPartido(std::string li
 }
 
 std::tuple <std::string,std::string> PartidoEliminatoria::ValidarPartido(std::string linea){
+    // DEBUG   std::cout << "SOY ELIMINATORIA, linea: " << linea << std::endl;
     bool partido_valido = true;
     std::tuple <std::string,std::string> resultado;
     // SEPARACION EN ARGUMENTOS
     std::string argv[6];
     int argc = 0;
     
-    int largo = len_string(linea);
+    int largo = int(linea.size());
     for (int i = 0; i < largo && partido_valido; i++){
         if ((int)linea[i] != 44)
             argv[argc] += linea[i];
@@ -144,20 +160,8 @@ std::tuple <std::string,std::string> PartidoEliminatoria::ValidarPartido(std::st
         partido_valido = false;
     }
 
-    int penales1;
-    if (argv[2] == "-1")
-        penales1 = -1;
-    else
-        penales1 = std::stoi(argv[2]);
-    
-    int penales2;
-    if (argv[5] == "-1")
-        penales2 = -1;
-    else
-        penales2 = std::stoi(argv[5]);
-
     // ASIGNACION DE ARGUMENTOS A RESULTADO DE SALIDA
-    if (std::stoi(argv[1]) < 0 || penales1 < -1 || std::stoi(argv[4]) < 0 || penales2 < -1){
+    if (std::stoi(argv[1]) < 0 || std::stoi(argv[2]) < -1 || std::stoi(argv[4]) < 0 || std::stoi(argv[5]) < -1){
         std::cerr << "CANTIDAD DE GOLES y/o PENALES INCORRECTA. Linea: " << linea << std::endl;
         partido_valido = false;
     }

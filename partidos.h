@@ -18,6 +18,7 @@ class Partido
         void AsignarGoles(int goles, bool equipo1);
         void AsignarLinea(int linea);
         void NoEsOriginal();
+        int MostrarGoles(bool equipo1);
         virtual std::tuple<int,int> MostrarPuntos() = 0;
         // virtual int CalcularPuntaje(Equipo* equipo) = 0;
         virtual Equipo* MostrarGanador() = 0;

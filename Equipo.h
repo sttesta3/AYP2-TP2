@@ -54,6 +54,9 @@ class Equipo {
 
         void NoEsOriginal(void);
         int MostrarFaseFinal(void);
+
+        // DEBUG FUNCTION
+        void MostrarPartidosFase(std::string fase);
 };
 
 #endif // EQUIPO_H

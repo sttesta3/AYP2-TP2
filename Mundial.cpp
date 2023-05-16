@@ -103,6 +103,9 @@ int Mundial::CargarPartidos(std::string archivo2){
     while (getline(entrada, linea)){
         linea = to_lower(linea);
         // std::cout << "LINEA PARTIDO: " << linea << std::endl;
+
+        // DEBUG DictarLinea(linea);
+
         if (divisor_de_fase(linea)){
             fase = linea;
             // DEBUG std::cout << "ESTO ES UNA FASE" << std::endl;
@@ -111,7 +114,7 @@ int Mundial::CargarPartidos(std::string archivo2){
             // POLIMORFISMO !!!!!!
             // CREAR PARTIDO SEGUN FASE
             Partido* nuevo_partido;
-            if (fase.compare("grupos") == 1)
+            if (cmp_string(fase,"grupos"))
                 nuevo_partido = new PartidoGrupo;
             else
                 nuevo_partido = new PartidoEliminatoria;
@@ -166,10 +169,16 @@ int Mundial::CargarPartidos(std::string archivo2){
 
 // FUNCIONES DE MENU
 void Mundial::MostrarMenu(void){
-    // DEBUG    std::cout << "DEBUGs" << std::endl;
-    //this->ListarCantFasesPorEquipo();
+    // DEBUG    
+    std::cout << "DEBUGs" << std::endl;
+    this->ListarPartidos();
     std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
+    /* DEBUG
+    for (int i = 0; i < int(this->grupos.size()); i++)
+        this->grupos[i]->MostrarPartidosFase("grupos");
 
+    std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
+    */
     this->FiguraAscii1();
     std::cout << "════════════════════════════════════════════════════════════════════════════════════" << std::endl;
     std::cout << "Bienvenido a la aplicacion no oficial del mundial de Qatar!" << std::endl;
@@ -377,6 +386,12 @@ void Mundial::MostrarBuscarEquipo(std::string busqueda){
 void Mundial::MenuPuntos(void){   
     int CANT_GRUPOS = this->MostrarCantidadGrupos();
     
+    // DEBUG
+    //for (int i = 0; i < CANT_GRUPOS; i++)
+      //  this->grupos[i]->MostrarPartidosFase("grupos");
+    
+
+
     std::cout << "PUNTOS POR GRUPO" << std::endl;
     for (int i = 0; i < CANT_GRUPOS; i++){
         std::cout << "GRUPO: " << char(toupper(this->grupos[i]->MostrarGrupo())) << std::endl;
@@ -792,7 +807,9 @@ void Mundial::ListarPartidos(void){
     //std::cout << "PG" << std::endl;
 
     this->partidos->IniciarIterador();
+    std::tuple <int,int> resultado;
     while (this->partidos->MostrarIterador() != nullptr){
+        /*
         std::cout <<  
         "Eq1: " << this->partidos->MostrarIterador()->MostrarContenido()->MostrarEquipos(true)->MostrarNombre() <<
         "Eq2: " << this->partidos->MostrarIterador()->MostrarContenido()->MostrarEquipos(false)->MostrarNombre() <<
@@ -802,6 +819,12 @@ void Mundial::ListarPartidos(void){
             std::cout << "EMPATE" << std::endl;
         else
             std::cout << "GANO: " << this->partidos->MostrarIterador()->MostrarContenido()->MostrarGanador()->MostrarNombre() << std::endl;
+        this->partidos->AvanzarIterador(1);
+        */
+        std::cout << this->partidos->MostrarIterador()->MostrarContenido()->MostrarEquipos(true)->MostrarNombre() << " vs " << 
+        this->partidos->MostrarIterador()->MostrarContenido()->MostrarEquipos(false)->MostrarNombre() << " " << 
+        this->partidos->MostrarIterador()->MostrarContenido()->MostrarGoles(true) << " a " << 
+        this->partidos->MostrarIterador()->MostrarContenido()->MostrarGoles(false) << std::endl;
         this->partidos->AvanzarIterador(1);
     }
 }
@@ -827,7 +850,7 @@ void Mundial::ListarCantFasesPorEquipo(void){
 /*
 tuple <string, char> Mundial::ValidarEquipo(string linea){
     int equipo_valido = 0;
-    int largo = len_string(linea);
+    int largo = int(linea.size());
     tuple <string, char> resultado;
 
     if (isalpha(linea[largo - 1]) && (int)linea[largo - 2] == 32){

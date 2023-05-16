@@ -20,7 +20,7 @@ char Equipo::MostrarGrupo(void){
 
 int Equipo::ValidarEquipo(std::string linea){
     int equipo_valido = 0;
-    int largo = len_string(linea);
+    int largo = int(linea.size());
 
     // SI TERMINA EN ' X', entonces itera pa00ra chequear que sea alfabetico
     if (is_alfa(linea[largo - 1]) && (int)linea[largo - 2] == 32){
@@ -61,7 +61,7 @@ void Equipo::AgregarPartido(Partido* partido, std::string fase){
     // SE TOMARON COMO BASE ALGUNO DE LOS EJEMPLOS DE MicrosoftLearn
     // https://learn.microsoft.com/es-es/cpp/standard-library/vector-class?view=msvc-170#insert 
 
-    if (fase.compare("grupos") == 1){
+    if (cmp_string("grupos",fase)){
         // SI ESTA VACIO, CREAR FASE
         if (this->fases.size() == 0){
             Fase* nuevo_grupos = new FaseGrupo;
@@ -255,8 +255,8 @@ void Equipo::MostrarPuntosDelGrupo(){
         ii = 0; iterar = true;
         while (iterar && ii < int(Equipos_por_puntaje.size())){
             // Compara rival contra el equipo que no coincide con su nombre. Si encuentra coincidencia, es el partido buscado
-            if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) == 1 ){
-                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false);
+            if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true)->MostrarNombre()) != 1 ){
+                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true);
                 puntos_equipo = equipo_a_insertar->CalcularPuntajeGrupos();
                 puntos_vector = Equipos_por_puntaje[ii]->CalcularPuntajeGrupos();
                 if (puntos_equipo > puntos_vector){
@@ -267,8 +267,8 @@ void Equipo::MostrarPuntosDelGrupo(){
                     ii += 1;
 
             }
-            else if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) == 1 ){ 
-                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(true);
+            else if ( this->MostrarNombre().compare(this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false)->MostrarNombre()) != 1 ){ 
+                equipo_a_insertar = this->fases[POSICION_GRUPO]->partidos[i]->MostrarEquipos(false);
                 puntos_equipo = equipo_a_insertar->CalcularPuntajeGrupos();
                 puntos_vector = Equipos_por_puntaje[ii]->CalcularPuntajeGrupos();
                 if (puntos_equipo > puntos_vector){
@@ -319,4 +319,33 @@ Equipo::MostrarFasesExistentes(){
     }
 
     return resultado;
+}
+
+
+void Equipo::MostrarPartidosFase(std::string fase){
+    if (cmp_string("grupos",fase)){
+        int CANT_FASES = int(this->fases.size());
+        int i = 0;
+
+        Equipo* equipo1, *equipo2;
+        Partido* partido;
+        std::tuple <int,int> resultado;
+        while (i < CANT_FASES && !cmp_string(this->fases[i]->MostrarFase(),fase) )
+            i += 1;
+
+        if (i < CANT_FASES){
+            int CANT_PARTIDOS = int(this->fases[i]->partidos.size());
+
+            for (int ii = 0; ii < CANT_PARTIDOS; ii++){
+                partido = this->fases[i]->partidos[ii];
+                equipo1 = partido->MostrarEquipos(true);
+                equipo2 = partido->MostrarEquipos(false);
+                resultado = partido->MostrarPuntos();
+                
+                std::cout << equipo1->MostrarNombre() << " vs. " << equipo2->MostrarNombre() << " " << partido->MostrarGoles(true) << " a " << partido->MostrarGoles(false) << std::endl;
+            }
+        }
+    }
+    else
+        std::cout << "Entraste cualquier fruta" << std::endl;
 }
