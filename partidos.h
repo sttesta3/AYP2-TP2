@@ -26,7 +26,8 @@ class Partido
         virtual void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2) = 0;
         virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
         virtual std::tuple<std::string,std::string> ValidarPartido(std::string linea) = 0;
-
+        
+        virtual ~Partido() = 0;
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0; 
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
@@ -49,7 +50,7 @@ class Partido
 class PartidoGrupo: public Partido{
     public:
         PartidoGrupo();
-        //~PartidoGrupo();
+        ~PartidoGrupo();
 
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
@@ -68,7 +69,7 @@ class PartidoEliminatoria: public Partido{
         PartidoEliminatoria();
         void AsignarPenales(int penales1, int penales2);
 
-        // ~PartidoEliminatoria();
+        ~PartidoEliminatoria();
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
 

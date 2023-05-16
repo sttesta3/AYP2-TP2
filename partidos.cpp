@@ -6,11 +6,11 @@
 //#include <string>
 
 //Partido::Partido(){}
-//Partido::~Partido(){}
+Partido::~Partido(){}
 PartidoGrupo::PartidoGrupo():Partido(){}
-//PartidoGrupo::~PartidoGrupo():Partido(){}
+PartidoGrupo::~PartidoGrupo(){}
 PartidoEliminatoria::PartidoEliminatoria():Partido(){}
-//PartidoEliminatoria::~PartidoEliminatoria():Partido(){}
+PartidoEliminatoria::~PartidoEliminatoria(){}
 
 void Partido::AsignarEquipo(Equipo* equipo, bool equipo1){
     if (equipo1)

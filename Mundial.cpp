@@ -16,8 +16,15 @@ Mundial::~Mundial()
 {
     // DESTRUCTOR
     // COMO TODA LA MEMORIA DINAMICA DEL PROGRAMA DEPENDE DE ESTAS DOS LISTAS, ES SUFICIENTE BORRARLAS PARA QUE SE BORRE TUTI
-    delete this->equipos;
+    this->partidos->IniciarIterador();
+    Partido* borrar;
+    while (this->partidos->MostrarIterador() != nullptr){
+        borrar = this->partidos->MostrarIterador()->MostrarContenido();
+        this->partidos->AvanzarIterador(1);
+        delete borrar;
+    }
     delete this->partidos;
+    delete this->equipos;
 }
 
 int Mundial::CargarEquipos(std::string archivo1){
@@ -125,19 +132,19 @@ int Mundial::CargarPartidos(std::string archivo2){
             if ( std::get<0>(nuevo_partido->MostrarPuntos() ) == -5){
                 std::cerr << "LINEA PARTIDO INVALIDA: " << linea << std::endl;
                 entrada.close(); 
-                //delete nuevo_partido;
+                delete nuevo_partido;
                 return 1;
             }
             else if ( !(equipo1 = this->BuscarEquipo(std::get<0>(encontrado)) ) ){
                 std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<0>(encontrado) << " Partido: " << linea << std::endl;
                 entrada.close(); 
-                //delete nuevo_partido;
+                delete nuevo_partido;
                 return 1;
             }
             else if (!(equipo2 = this->BuscarEquipo(std::get<1>(encontrado)))){
                 std::cerr << "EQUIPO NO ENCONTRADO: " << std::get<1>(encontrado) << " Partido: " << linea << std::endl;
                 entrada.close(); 
-                //delete nuevo_partido;
+                delete nuevo_partido;
                 return 1;
             }
 
