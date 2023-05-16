@@ -18,6 +18,7 @@ class Partido
         void AsignarGoles(int goles, bool equipo1);
         void AsignarLinea(int linea);
         void NoEsOriginal();
+        int MostrarGoles(bool equipo1);
         virtual std::tuple<int,int> MostrarPuntos() = 0;
         // virtual int CalcularPuntaje(Equipo* equipo) = 0;
         virtual Equipo* MostrarGanador() = 0;
@@ -25,7 +26,8 @@ class Partido
         virtual void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2) = 0;
         virtual void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2) = 0;
         virtual std::tuple<std::string,std::string> ValidarPartido(std::string linea) = 0;
-
+        
+        virtual ~Partido() = 0;
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0; 
         // virtual int ValidarPartido(string linea, Mundial* mundial) = 0;
         // virtual int CargarDatos(string linea, Lista<Partido>* partidos) = 0;
@@ -42,15 +44,13 @@ class Partido
         int goles1;
         int goles2;
 
-        bool original_de_archivo;
-        bool editado;
         int linea;
 };
 
 class PartidoGrupo: public Partido{
     public:
         PartidoGrupo();
-        //~PartidoGrupo();
+        ~PartidoGrupo();
 
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
@@ -61,6 +61,7 @@ class PartidoGrupo: public Partido{
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
         void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
+
 };
 
 class PartidoEliminatoria: public Partido{
@@ -68,7 +69,7 @@ class PartidoEliminatoria: public Partido{
         PartidoEliminatoria();
         void AsignarPenales(int penales1, int penales2);
 
-        // ~PartidoEliminatoria();
+        ~PartidoEliminatoria();
         std::tuple<std::string,std::string> ValidarPartido(std::string linea);
         void AsignarValores(Equipo* equipo1, Equipo* equipo2, int goles1, int goles2);
 
@@ -77,7 +78,6 @@ class PartidoEliminatoria: public Partido{
         Equipo* MostrarGanador();
         Equipo* MostrarPerdedor();
         void SolicitarValores(Equipo* equipo1, Equipo* equipo2, std::string nombre1, std::string nombre2);
-
         
     private:
         int penales1;

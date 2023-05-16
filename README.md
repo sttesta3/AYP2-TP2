@@ -1,6 +1,12 @@
 # AYP2-TP2
 ## TP2 AYP2 - El error de La'eeb, la venganza de La'eebb
 
+### PENDIENTES
+#### VALGRIND LEAKEA MEMORIA, sigo debuggeando
+#### Equipos Por Puntos no funciona correctamente
+#### No Guarda en archivo al cerrar programa (Pero esta implementado el andamiaje sobre el que se realizara la tarea)
+#### Seguire trabajando en el tp post entrega para dejarlo funcionando (branch develop). Tomen como ultimo el pusheado en branch "entrega_final"
+
 ### LOGICA INTERNA
 #### El programa contiene una lista de equipos y una lista de partidos
 #### Los equipos tienen un vector de fases que contiene un vector de partidos con punteros a los partidos en la lista

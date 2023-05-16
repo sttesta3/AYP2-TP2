@@ -7,7 +7,7 @@ Fase::Fase()
 
 Fase::~Fase()
 {
-    //for (int i = 0; i < int(this->partidos.size()); i++)
+    // for (int i = 0; i < int(this->partidos.size()); i++)
         // delete this->partidos[i];
 
     // delete this->partidos;
